@@ -6,112 +6,9 @@
   <meta name="description" content="Yinuo Meng's personal homepage.">
   <meta name="author" content="Yinuo Meng">
   <title>Yinuo Meng</title>
-  <style>
-    body {
-      margin: 32px auto 40px;
-      max-width: 900px;
-      padding: 0 24px;
-      color: #111;
-      background: #fff;
-      font-family: Georgia, "Times New Roman", Times, serif;
-      font-size: 16px;
-      line-height: 1.42;
-    }
-
-    a {
-      color: #0645ad;
-      text-decoration: none;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    h1 {
-      margin: 0 0 10px;
-      font-size: 30px;
-      font-weight: normal;
-    }
-
-    h2 {
-      margin: 0 0 12px;
-      font-size: 20px;
-      font-weight: normal;
-    }
-
-    p {
-      margin: 0 0 11px;
-    }
-
-    ul {
-      margin: 0 0 0 22px;
-      padding: 0;
-    }
-
-    li {
-      margin-bottom: 6px;
-    }
-
-    hr {
-      margin: 18px 0 14px;
-      border: 0;
-      border-top: 1px solid #aaa;
-    }
-
-    .top {
-      display: grid;
-      grid-template-columns: 1fr 160px;
-      gap: 28px;
-      align-items: start;
-    }
-
-    .links {
-      margin-bottom: 18px;
-    }
-
-    .links a {
-      white-space: nowrap;
-    }
-
-    .portrait {
-      display: block;
-      width: 150px;
-      height: 150px;
-      object-fit: cover;
-    }
-
-    .entry {
-      margin-bottom: 16px;
-    }
-
-    .entry-title {
-      font-weight: bold;
-    }
-
-    .venue {
-      margin-top: 2px;
-    }
-
-    .links-line {
-      margin-top: 2px;
-    }
-
-    @media (max-width: 650px) {
-      body {
-        margin-top: 22px;
-        padding: 0 18px 32px;
-      }
-
-      .top {
-        display: block;
-      }
-
-      .portrait {
-        margin: 0 0 16px;
-      }
-
-    }
-  </style>
+  <link rel="icon" type="image/jpeg" href="assets/avatar.jpg">
+  <link rel="apple-touch-icon" href="assets/avatar.jpg">
+  <link rel="stylesheet" href="assets/site.css">
 </head>
 
 <body>
@@ -124,6 +21,8 @@
         <a href="mailto:yinuomeng1008@gmail.com">Email</a>
         |
         <a href="https://github.com/NormalizedNeat">GitHub</a>
+        |
+        <a href="blog/">Blog</a>
         |
       </p>
 
@@ -151,7 +50,7 @@
 
     <img
       class="portrait"
-      src="https://avatars.githubusercontent.com/u/208020648?v=4"
+      src="assets/avatar.jpg"
       alt="Yinuo Meng"
       width="150"
       height="150"
@@ -165,6 +64,27 @@
     <li>[2026] Started an internship on large language model post-training at DiDi Chuxing.</li>
     <li>[2026] I will continue my graduate study at UESTC, advised by Prof. Weidong Mei.</li>
   </ul>
+
+  <hr>
+
+  <h2>Blog</h2>
+
+  <div class="entry">
+    <p class="entry-title"><a href="blog/from-sft-to-rl.html">从SFT到RL</a></p>
+    <p>
+      Notes on the post-training path from supervised fine-tuning to
+      reinforcement learning.
+    </p>
+  </div>
+
+  <div class="entry">
+    <p class="entry-title"><a href="blog/opd-series.html">OPD系列论文</a></p>
+    <p>
+      Notes on on-policy distillation and its extensions in post-training.
+    </p>
+  </div>
+
+  <p class="links-line"><a href="blog/">All blog posts</a></p>
 
   <hr>
 
