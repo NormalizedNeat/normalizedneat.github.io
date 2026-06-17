@@ -6,34 +6,72 @@
   <meta name="description" content="OPD, on-policy distillation, and its extensions in post-training.">
   <meta name="author" content="Yinuo Meng">
   <title>OPD：在策略蒸馏以及其在后训练上的拓展 - Yinuo Meng</title>
-  <link rel="icon" type="image/jpeg" href="../assets/avatar.jpg">
-  <link rel="apple-touch-icon" href="../assets/avatar.jpg">
+  <link rel="icon" href="../favicon.ico?v=2" sizes="any">
+  <link rel="icon" type="image/png" href="../favicon-32.png?v=2" sizes="32x32">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png?v=2">
   <link rel="stylesheet" href="../assets/site.css">
 </head>
 
-<body>
+<body class="opd-page">
   <p class="nav-line"><a href="../index.html">Yinuo Meng</a> / <a href="index.html">Blog</a></p>
 
-  <article class="article">
-    <h1>OPD：在策略蒸馏以及其在后训练上的拓展</h1>
-    <p class="post-meta">Paper Reading Notes</p>
+  <article class="article research-article">
+    <header class="post-hero">
+      <p class="post-kicker">Paper Reading Notes</p>
+      <h1>OPD：在策略蒸馏以及其在后训练上的拓展</h1>
+      <p class="post-dek">
+        从 on-policy distillation 到 OPSD、RLSD 和 SDAR，整理 teacher signal
+        在后训练中从“目标”逐步降级为“约束、权重和辅助 gate”的演化逻辑。
+      </p>
+      <div class="post-tags" aria-label="Topics">
+        <span>On-Policy Distillation</span>
+        <span>RLVR</span>
+        <span>Post-training</span>
+        <span>Agentic RL</span>
+      </div>
+    </header>
 
-    <p>
-      OPD 这条线表面上是在讨论知识蒸馏，实际上更像是在讨论后训练里
-      <b>teacher signal 应该以什么权限进入优化过程</b>。从基础的
-      on-policy distillation，到 Rethinking OPD、Uni-OPD、OPSD、RLSD 和
-      SDAR，核心变化不是简单换一个 loss，而是不断重新回答一个问题：
-      teacher 给出的信号到底应该是目标、奖励、排序约束、credit 权重，还是只是一种
-      辅助 gate。
-    </p>
+    <nav class="paper-toc" aria-label="文章目录">
+      <p class="toc-title">文章结构</p>
+      <a href="#kl-semantics">KL 方向</a>
+      <a href="#basic-opd">基础 OPD</a>
+      <a href="#rethinking-opd">Rethinking OPD</a>
+      <a href="#long-horizon">长程限制</a>
+      <a href="#uni-opd">Uni-OPD</a>
+      <a href="#opsd">OPSD</a>
+      <a href="#rlvr-leakage">信息泄漏</a>
+      <a href="#rlsd">RLSD</a>
+      <a href="#sdar">SDAR</a>
+      <a href="#take-away">Take Away</a>
+    </nav>
 
-    <p>
-      我在读这一系列工作时，更关心的不是某个实验数字，而是它们共同暴露出的信息结构：
-      student 当前能访问什么状态，teacher 在这些状态上是否可靠，teacher 有没有看到
-      student 推理时看不到的信息，以及 dense token-level signal 和 sparse
-      outcome reward 应该如何组合。OPD 的很多问题，都是同一个
-      <code>log pi_T - log pi_theta</code> 在不同上下文里含义变化后产生的。
-    </p>
+    <div class="article-lead">
+      <p>
+        OPD 这条线表面上是在讨论知识蒸馏，实际上更像是在讨论后训练里
+        <b>teacher signal 应该以什么权限进入优化过程</b>。从基础的
+        on-policy distillation，到 Rethinking OPD、Uni-OPD、OPSD、RLSD 和
+        SDAR，核心变化不是简单换一个 loss，而是不断重新回答一个问题：
+        teacher 给出的信号到底应该是目标、奖励、排序约束、credit 权重，还是只是一种
+        辅助 gate。
+      </p>
+
+      <p>
+        我在读这一系列工作时，更关心的不是某个实验数字，而是它们共同暴露出的信息结构：
+        student 当前能访问什么状态，teacher 在这些状态上是否可靠，teacher 有没有看到
+        student 推理时看不到的信息，以及 dense token-level signal 和 sparse
+        outcome reward 应该如何组合。OPD 的很多问题，都是同一个
+        <code>log pi_T - log pi_theta</code> 在不同上下文里含义变化后产生的。
+      </p>
+    </div>
+
+    <aside class="reading-lens" aria-label="阅读视角">
+      <p class="lens-label">Reading lens</p>
+      <p>
+        这篇笔记按“teacher 权限”来读这一组论文：先看 teacher 是否能在 student
+        访问的状态上给出可靠 token signal，再看这个 signal 能不能和 outcome reward
+        对齐，最后讨论 privileged information 进入训练时应该被限制到什么程度。
+      </p>
+    </aside>
 
     <figure>
       <img
@@ -47,7 +85,7 @@
       </figcaption>
     </figure>
 
-    <h2>1. 从 KL 方向看 OPD 的基本语义</h2>
+    <h2 id="kl-semantics">1. 从 KL 方向看 OPD 的基本语义</h2>
     <p>
       传统知识蒸馏通常是 off-policy 的：teacher 先生成一批固定答案，student 再在
       这些 teacher-generated sequences 上做 SFT 或 KL matching。这样做很自然，
@@ -91,7 +129,7 @@
       最终答案对不对，而 OPD 试图告诉模型每个 token 在 teacher 看来是否更合理。
     </p>
 
-    <h2>2. 基础 OPD：解决 exposure bias，但不保证 teacher 可靠</h2>
+    <h2 id="basic-opd">2. 基础 OPD：解决 exposure bias，但不保证 teacher 可靠</h2>
     <p>
       基础 OPD 的优势可以从三个角度理解。第一，它是 on-policy 的，监督发生在
       student 自己生成的轨迹上，因此减少了 off-policy distillation 的
@@ -131,7 +169,7 @@
       可学习、且和最终任务目标一致的 token-level preference。
     </p>
 
-    <h2>3. Rethinking OPD：强 teacher 不等于好 teacher</h2>
+    <h2 id="rethinking-opd">3. Rethinking OPD：强 teacher 不等于好 teacher</h2>
     <p>
       <i>Rethinking On-Policy Distillation of Large Language Models</i>
       这篇论文最有价值的地方，不是提出了一个更复杂的 loss，而是把 OPD teacher
@@ -184,7 +222,7 @@
       和 teacher 训练分布之间的偏差。
     </p>
 
-    <h2>4. 长程限制：dense supervision 不是免费午餐</h2>
+    <h2 id="long-horizon">4. 长程限制：dense supervision 不是免费午餐</h2>
     <p>
       OPD 最吸引人的地方是 dense token-level supervision，但这份 dense signal
       不是免费午餐。随着 response 变长，student-generated prefix 会越来越偏离
@@ -225,7 +263,7 @@
       因此，OPD 在长程 agent 场景里不能简单照搬单轮 math reasoning 的经验。
     </p>
 
-    <h2>5. Uni-OPD：token gap 还需要 outcome 校准</h2>
+    <h2 id="uni-opd">5. Uni-OPD：token gap 还需要 outcome 校准</h2>
     <p>
       Rethinking OPD 主要回答 teacher signal 是否 locally exploitable；
       Uni-OPD 进一步问：这些 token-level gap 聚合成 trajectory return 后，
@@ -267,7 +305,7 @@
       冲突时，outcome reward 应该有更高权限。
     </p>
 
-    <h2>6. OPSD：后训练中的自然想法，也是风险入口</h2>
+    <h2 id="opsd">6. OPSD：后训练中的自然想法，也是风险入口</h2>
     <p>
       当 OPD 进入 RLVR、GRPO 这类后训练流程后，一个很自然的想法出现了：训练时我们
       经常有 ground truth answer、verifier、成功轨迹、工具反馈或 retrieved skill，
@@ -330,7 +368,7 @@
       student 的输出分布？
     </p>
 
-    <h2>7. Self-Distilled RLVR：OPSD 的问题是信息泄漏</h2>
+    <h2 id="rlvr-leakage">7. Self-Distilled RLVR：OPSD 的问题是信息泄漏</h2>
     <p>
       <i>Self-Distilled RLVR</i> 对 OPSD 的诊断很关键：naive OPSD 的失败不是简单
       overfitting，而是目标函数把 privileged teacher distribution 当成了 student
@@ -354,7 +392,7 @@
       top-1，只能降低泄漏带宽，不能改变这个信息结构。
     </p>
 
-    <h2>8. RLSD：把 teacher 从目标降为权重</h2>
+    <h2 id="rlsd">8. RLSD：把 teacher 从目标降为权重</h2>
     <p>
       RLSD 的核心修正可以概括为一句话：privileged teacher 不再决定 student 应该生成
       什么，只决定 student 已经生成的 token 应该获得多少 credit。它保留 RLVR/GRPO
@@ -422,7 +460,7 @@ w_t = exp(sign(A) * Delta_t)</code></pre>
       verifier 来决定策略更新方向。
     </p>
 
-    <h2>9. SDAR：多步 agent 中更保守的接入方式</h2>
+    <h2 id="sdar">9. SDAR：多步 agent 中更保守的接入方式</h2>
     <p>
       SDAR 把问题放到 multi-step agent 后训练里。这里 teacher signal 比单轮 RLVR
       更不稳定，因为 agent 每一步动作都会改变后续 observation。一个 retrieved skill
@@ -486,7 +524,7 @@ L = L_GRPO + lambda_SDAR * L_SDAR</code></pre>
       isolation。
     </p>
 
-    <h2>10. 统一理解：OPD 的本质是 teacher 权限管理</h2>
+    <h2 id="unified-view">10. 统一理解：OPD 的本质是 teacher 权限管理</h2>
     <p>
       把这些工作连起来看，OPD 家族的演化不是“teacher 越强越好”，而是“teacher
       signal 应该以什么身份进入训练”。
@@ -515,7 +553,7 @@ L = L_GRPO + lambda_SDAR * L_SDAR</code></pre>
       在更安全的设计里，它只是 credit weight 或 auxiliary gate。
     </p>
 
-    <h2>11. Take Away</h2>
+    <h2 id="take-away">11. Take Away</h2>
     <p>
       读完这一系列工作后，我最大的感受是：OPD 不是一个“找个强模型来教弱模型”的
       简单故事。真正难的地方在于，teacher 的信号到底能不能信、能信到什么程度、
@@ -533,7 +571,7 @@ L = L_GRPO + lambda_SDAR * L_SDAR</code></pre>
       这也是 RLSD 和 SDAR 相比 naive OPSD 更有意思的地方。
     </p>
 
-    <h2>References</h2>
+    <h2 id="references">References</h2>
     <ul>
       <li><a href="https://arxiv.org/abs/2604.13016">Rethinking On-Policy Distillation of Large Language Models</a></li>
       <li><a href="https://arxiv.org/abs/2605.03677">Uni-OPD: Unifying On-Policy Distillation with a Dual-Perspective Recipe</a></li>
