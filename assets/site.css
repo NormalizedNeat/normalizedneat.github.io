@@ -80,11 +80,19 @@ img {
 }
 
 .links {
-  margin-bottom: 18px;
+  margin-bottom: 6px;
 }
 
 .links a {
   white-space: nowrap;
+}
+
+.motto {
+  margin: 0 0 18px;
+  color: #666;
+  font-size: 15px;
+  font-style: italic;
+  opacity: 0.78;
 }
 
 .portrait {
