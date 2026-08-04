@@ -1,0 +1,627 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="OPD, on-policy distillation, and its extensions in post-training.">
+  <meta name="author" content="Yinuo Meng">
+  <title>OPD Series: On-Policy Distillation and Extensions in Post-Training - Yinuo Meng</title>
+  <link rel="icon" href="../favicon.ico?v=2" sizes="any">
+  <link rel="icon" type="image/png" href="../favicon-32.png?v=2" sizes="32x32">
+  <link rel="apple-touch-icon" href="../apple-touch-icon.png?v=2">
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+
+<body class="opd-page">
+  <p class="nav-line"><a href="../index.html">Yinuo Meng</a> / <a href="index.html">Blog</a></p>
+
+  <article class="article research-article">
+    <header class="post-hero">
+      <p class="post-kicker">Paper Reading Notes</p>
+      <h1>OPD Series: On-Policy Distillation and Extensions in Post-Training</h1>
+      <p class="post-dek">
+        From OPD to OPSD, RLSD, and SDAR, this note traces how teacher signals
+        move from direct targets to constraints, credit weights, and auxiliary
+        gates in post-training.
+      </p>
+      <div class="post-tags" aria-label="Topics">
+        <span>On-Policy Distillation</span>
+        <span>RLVR</span>
+        <span>Post-training</span>
+        <span>Agentic RL</span>
+      </div>
+    </header>
+
+    <nav class="paper-toc" aria-label="Article table of contents">
+      <p class="toc-title">Article Structure</p>
+      <a href="#kl-semantics">KL direction</a>
+      <a href="#basic-opd">Basic OPD</a>
+      <a href="#rethinking-opd">Rethinking OPD</a>
+      <a href="#long-horizon">Long-horizon limits</a>
+      <a href="#uni-opd">Uni-OPD</a>
+      <a href="#opsd">OPSD</a>
+      <a href="#rlvr-leakage">Information leakage</a>
+      <a href="#rlsd">RLSD</a>
+      <a href="#sdar">SDAR</a>
+      <a href="#takeaways">Takeaways</a>
+    </nav>
+
+    <div class="article-lead">
+      <p>
+        At first glance, OPD looks like a technical variant of knowledge
+        distillation. I find it more useful to read this line of work as a
+        discussion about <b>what authority a teacher signal should have during
+        post-training</b>. Across basic on-policy distillation, Rethinking OPD,
+        Uni-OPD, OPSD, RLSD, and SDAR, the central question is not simply how to
+        design another loss. The question is whether the teacher should define
+        the target distribution, shape a reward, enforce an ordering, assign
+        token-level credit, or only serve as an auxiliary gate.
+      </p>
+
+      <p>
+        The important object is often the same local gap:
+        <code>log pi_T - log pi_theta</code>. Its meaning changes completely
+        depending on the information structure. If the teacher and student see
+        the same state, this gap may be a useful token-level preference. If the
+        teacher sees a reference answer, retrieved skill, or other privileged
+        information, the same gap may become a leakage channel. This is why the
+        OPD family is better understood as teacher-signal governance than as a
+        single distillation trick.
+      </p>
+    </div>
+
+    <aside class="reading-lens" aria-label="Reading lens">
+      <p class="lens-label">Reading lens</p>
+      <p>
+        I organize the series by teacher authority. First, can the teacher give
+        reliable next-token feedback on states that the student actually visits?
+        Second, does that token-level signal agree with outcome-level
+        correctness? Third, if the teacher uses privileged information, how much
+        control should that signal have over the student policy?
+      </p>
+    </aside>
+
+    <figure>
+      <img
+        src="../assets/blog-images/opd-series/opd-figure-1-overview.png"
+        alt="Overview figure from the Rethinking OPD paper"
+      >
+      <figcaption>
+        Figure 1 from Rethinking OPD. The high-level message is that a stronger
+        teacher does not automatically provide distillable information. OPD is
+        most effective when it aligns thinking patterns and redistributes
+        probability mass over high-overlap tokens.
+      </figcaption>
+    </figure>
+
+    <h2 id="kl-semantics">1. KL Direction and the Basic Semantics of OPD</h2>
+    <p>
+      Classical distillation is usually off-policy. The teacher first generates
+      a fixed set of answers, and the student is trained on those
+      teacher-generated sequences through SFT or KL matching. This is cheap and
+      intuitive, but it creates a structural mismatch: during training, the
+      student sees teacher prefixes; during inference, the student must continue
+      from its own prefixes. Once an early token deviates from the teacher
+      trajectory, the later states may fall outside the region covered by the
+      training data.
+    </p>
+
+    <p>
+      OPD changes this by making the student roll out first. Given a prompt
+      <code>x</code>, we sample <code>y ~ pi_theta(. | x)</code> from the
+      current policy. Then, for each student-generated prefix
+      <code>(x, y_&lt;t)</code>, we query the teacher's next-token distribution.
+      The teacher is no longer teaching only on its own comfortable trajectory;
+      it is asked to provide local feedback on the states that the student
+      really visits.
+    </p>
+
+    <p>
+      The objective is usually closer to reverse KL:
+    </p>
+
+    <pre><code>L_OPD = E_{y ~ pi_theta(. | x)}
+  [ sum_t D_KL(pi_theta(. | x, y_&lt;t) || pi_T(. | x, y_&lt;t)) ]</code></pre>
+
+    <p>
+      The KL direction is not just a mathematical detail. Forward KL places the
+      expectation under the teacher and pushes the student to cover regions that
+      the teacher considers plausible. Reverse KL places the expectation under
+      the student and updates the policy only on regions that the student
+      currently samples. In practice, this makes OPD a way to correct the
+      student on its own on-policy state distribution.
+    </p>
+
+    <p>
+      If we look only at the sampled token, the local signal can be written as:
+    </p>
+
+    <pre><code>r_t = log pi_T(y_t | x, y_&lt;t) - log pi_theta(y_t | x, y_&lt;t)</code></pre>
+
+    <p>
+      When the teacher supports the sampled token more than the student does,
+      <code>r_t</code> is positive; otherwise it is negative. This is the main
+      attraction of OPD compared with sparse outcome-reward RL. RLVR can tell
+      the model whether the final answer is correct, but OPD tries to tell the
+      model whether each token is locally reasonable under the teacher.
+    </p>
+
+    <h2 id="basic-opd">2. Basic OPD: Exposure Bias Is Reduced, but Teacher Reliability Is Not Guaranteed</h2>
+    <p>
+      Basic OPD has three appealing properties. First, it is on-policy, so the
+      supervision happens on trajectories produced by the current student.
+      Second, it is dense: every token position can receive teacher feedback.
+      Third, it matches the autoregressive structure of language models because
+      both the student and teacher are evaluated as next-token predictors under
+      prefix states.
+    </p>
+
+    <p>
+      There are several implementation granularities. Full-vocabulary OPD
+      computes KL over the entire vocabulary at each position, which is the most
+      information-rich but also the most expensive because it requires
+      <code>B * T * |V|</code> logits. Top-k OPD renormalizes over a subset of
+      high-probability tokens, trading off fidelity and cost. Sampled-token OPD
+      uses only the token actually sampled by the student. Even though it
+      observes one token per position, its expectation is still tied to reverse
+      KL because the token is sampled from the student distribution.
+    </p>
+
+    <p>
+      This last point is easy to underestimate. Sampled-token OPD is not a fixed
+      one-point approximation over the whole training run. As the student policy
+      changes, the sampled states and sampled tokens also change, so the method
+      keeps probing the student high-probability region. The empirical story in
+      Rethinking OPD is consistent with this: sampled-token OPD can be quite
+      strong, while overly collapsed variants such as Top-1 OPD are much more
+      fragile.
+    </p>
+
+    <p>
+      The weakness is also clear. The teacher distribution on a
+      student-generated prefix is not automatically reliable. Early in training,
+      the student may visit prefixes that the teacher would rarely generate.
+      Such off-manifold states can make the teacher's next-token probabilities
+      noisy. A high benchmark score does not imply that the teacher can provide
+      stable, learnable, and task-aligned gradients on the local states visited
+      by the student.
+    </p>
+
+    <h2 id="rethinking-opd">3. Rethinking OPD: A Strong Teacher Is Not Necessarily a Good Teacher</h2>
+    <p>
+      The most useful contribution of <i>Rethinking On-Policy Distillation of
+      Large Language Models</i> is that it moves teacher quality away from a
+      single benchmark number and toward <b>thinking-pattern compatibility on
+      student-visited states</b>. A teacher should not only be globally strong;
+      it should be able to teach the student at the states the student actually
+      reaches.
+    </p>
+
+    <p>
+      The paper uses several dynamic indicators to explain successful and
+      failing OPD runs. Top-k overlap ratio measures whether the student and
+      teacher share high-probability candidate tokens under the same prefix.
+      Overlap-token advantage measures whether the teacher provides useful
+      probability differences inside that shared candidate set. Entropy gap
+      measures whether their confidence levels are close. In successful runs,
+      these indicators improve steadily; in failed runs, they stall or degrade.
+    </p>
+
+    <figure>
+      <img
+        src="../assets/blog-images/opd-series/opd-figure-6-success-failure.png"
+        alt="Successful and failing OPD dynamics"
+      >
+      <figcaption>
+        Figure 6 from Rethinking OPD. Successful runs show increasing overlap,
+        shrinking entropy gaps, and more balanced overlap-token advantage. Failed
+        runs do not develop this alignment process.
+      </figcaption>
+    </figure>
+
+    <p>
+      The implication is that effective OPD is often not about pulling the
+      student into entirely new modes from scratch. Instead, it redistributes
+      probability mass inside regions where the student and teacher already have
+      substantial overlap. One important observation is that overlap tokens carry
+      the overwhelming majority of probability mass, roughly in the 97% to 99%
+      range in the paper's analysis. OPD mainly adjusts relative preference in
+      shared high-probability regions.
+    </p>
+
+    <p>
+      This also explains why a larger teacher can be worse. If the teacher's
+      reasoning pattern is too far from the student's, the student's prefixes may
+      look unnatural to the teacher, and the local target becomes hard to learn.
+      If the teacher is too similar to the student, it may be compatible but
+      provide little new capability. A useful OPD teacher sits between these
+      extremes: compatible enough to be locally teachable, but different enough
+      to contribute missing solution patterns.
+    </p>
+
+    <p>
+      Off-policy cold start and teacher-aligned prompts can both be read as ways
+      to move the student into regions where the teacher can actually teach.
+      Cold start does not reject on-policy distillation. It simply gives the
+      student a better initial policy so that later on-policy rollouts land
+      closer to the teacher's useful manifold.
+    </p>
+
+    <h2 id="long-horizon">4. Long-Horizon Limits: Dense Supervision Is Not Free</h2>
+    <p>
+      Dense token-level supervision is the main appeal of OPD, but it is not a
+      free lunch. As responses become longer, student-generated prefixes can
+      drift further away from the teacher's natural trajectories. The teacher may
+      provide useful continuation probabilities near the beginning, yet become
+      less reliable deep into a prefix that it would not have produced itself.
+    </p>
+
+    <p>
+      The response-length experiments in Rethinking OPD show a direct pattern.
+      If the response is too short, there are not enough supervised tokens. At
+      moderate length, dense supervision is valuable. When the response is pushed
+      further, performance no longer improves reliably and the training dynamics
+      can show overlap collapse, entropy spikes, or gradient-norm spikes.
+    </p>
+
+    <figure>
+      <img
+        src="../assets/blog-images/opd-series/opd-figure-11-response-length.png"
+        alt="Response length and teacher continuation degradation in OPD"
+      >
+      <figcaption>
+        Figure 11 from Rethinking OPD. The left panel compares validation
+        performance under different response lengths. The right panel shows that
+        teacher continuation accuracy gain decays as the student prefix becomes
+        longer.
+      </figcaption>
+    </figure>
+
+    <p>
+      The right panel is especially informative. If the teacher continues from a
+      short student prefix, it can still improve accuracy. As the truncation
+      length increases, the benefit of teacher continuation quickly declines.
+      This suggests that the teacher is not uniformly reliable on arbitrary
+      student states. The more severe the prefix drift, the noisier the local
+      teacher judgment can become.
+    </p>
+
+    <p>
+      This matters for agentic RL. Agent trajectories are not only long texts;
+      they include actions, observations, tool outputs, and state transitions.
+      If the student takes a wrong action early, later observations change, and a
+      teacher or retrieved skill may no longer apply cleanly. OPD in long-horizon
+      agent settings therefore cannot be copied directly from single-turn math
+      reasoning.
+    </p>
+
+    <h2 id="uni-opd">5. Uni-OPD: Token Gaps Need Outcome Calibration</h2>
+    <p>
+      Rethinking OPD asks whether the teacher signal is locally exploitable.
+      Uni-OPD asks a further question: after token-level gaps are aggregated
+      into a trajectory-level return, do they agree with final correctness?
+      This is important because a teacher's local token preferences do not
+      automatically induce the right ordering over whole trajectories.
+    </p>
+
+    <p>
+      For a trajectory, the token gap can be averaged into:
+    </p>
+
+    <pre><code>G_OPD(q, tau) = (1 / |tau|) sum_t
+  [log pi_T(o_t | q, o_&lt;t) - log pi_theta(o_t | q, o_&lt;t)]</code></pre>
+
+    <p>
+      If a verifier can distinguish correct and incorrect trajectories for the
+      same prompt, a reliable distillation return should at least rank correct
+      trajectories above incorrect ones. Otherwise, the teacher's token-level
+      preference may look detailed but still prefer a wrong solution when viewed
+      at the trajectory level.
+    </p>
+
+    <p>
+      Uni-OPD separates failure modes from two perspectives. The student
+      perspective asks whether rollouts contain useful contrast; if all sampled
+      trajectories for a prompt are correct or all are wrong, the learning signal
+      is weak. The teacher perspective asks whether the token gap is trustworthy;
+      a wrong trajectory may look stylistically teacher-like, while a correct but
+      novel trajectory may receive a lower gap.
+    </p>
+
+    <p>
+      The core idea is order-consistency calibration. The verifier or outcome
+      reward defines correct and incorrect sets. Then the OPD return is checked
+      against that ordering and adjusted through masking or margin shifting when
+      it violates the desired order. In this view, the verifier has higher
+      authority than the local teacher gap.
+    </p>
+
+    <p>
+      This clarifies the relationship between OPD and RLVR. The teacher provides
+      dense local preference, while the verifier provides global correctness
+      ordering. When they agree, the OPD signal is useful. When they conflict,
+      outcome-level correctness should constrain or override the teacher signal.
+    </p>
+
+    <h2 id="opsd">6. OPSD: A Natural Post-Training Idea and a Risk Entry Point</h2>
+    <p>
+      Once OPD enters RLVR or GRPO-style post-training, a natural idea appears.
+      During training, we often have ground-truth answers, verifiers, successful
+      trajectories, tool feedback, or retrieved skills. Can the model use this
+      privileged information to provide dense token supervision for itself? This
+      is the motivation behind OPSD, or on-policy self-distillation.
+    </p>
+
+    <figure>
+      <img
+        src="../assets/blog-images/opd-series/opsd-figure-1-framework.png"
+        alt="OPSD framework from Self-Distilled Reasoner"
+      >
+      <figcaption>
+        Figure 1 from Self-Distilled Reasoner. The same model is split into a
+        student view and a self-teacher view. The student sees the original
+        problem, while the teacher receives additional reference information and
+        produces token-level supervision on the student's trajectory.
+      </figcaption>
+    </figure>
+
+    <p>
+      In a typical OPSD setup, the student samples a reasoning trajectory from
+      the prompt <code>x</code>. The self-teacher is the same model, but its
+      prompt additionally contains a reference answer or hint. On the tokens
+      already generated by the student, we compute both student and teacher
+      log-probabilities and use their gap as dense supervision. The appeal is
+      obvious: the trajectory is still on-policy, no external larger teacher is
+      needed at inference time, and token-level gaps can help with credit
+      assignment where sparse RLVR rewards are too coarse.
+    </p>
+
+    <p>
+      Conceptually, OPSD tries to transform "the answer is known during
+      training" into local explanatory power. An outcome reward says whether the
+      whole chain ends correctly. The self-teacher tries to answer a finer
+      question: given this prefix, which next tokens look more consistent with a
+      path toward the correct answer?
+    </p>
+
+    <p>
+      The risk starts from the same design. The teacher is not only more
+      informed because of model ability; it is more informed because it sees
+      inputs that the student will not see at inference time. The teacher gap
+      therefore mixes two components: transferable reasoning preference and
+      conditional information from the reference. If the training objective asks
+      the student to directly match the privileged teacher distribution, it is
+      asking the student to imitate a distribution conditioned on invisible
+      variables.
+    </p>
+
+    <pre><code>P_S(y_t | x, y_&lt;t) ~= P_T(y_t | x, r, y_&lt;t)</code></pre>
+
+    <p>
+      Here <code>r</code> may be a reference answer, skill, or other privileged
+      context. The student never sees <code>r</code> at inference time. A safer
+      target would be closer to a teacher distribution marginalized over such
+      information, not a conditional distribution for each privileged context.
+      This is the information asymmetry that later motivates RLSD and SDAR.
+    </p>
+
+    <h2 id="rlvr-leakage">7. Self-Distilled RLVR: The Problem Is Information Leakage</h2>
+    <p>
+      <i>Self-Distilled RLVR</i> gives an important diagnosis: naive OPSD does
+      not merely overfit. Its objective treats a privileged teacher distribution
+      as a target that the student must match. The teacher sees information that
+      the student cannot see, but is still given direct authority over the
+      student's output distribution.
+    </p>
+
+    <p>
+      From the KL decomposition perspective, the OPSD objective contains a term
+      reflecting how much the teacher prediction depends on privileged
+      information. The student cannot truly optimize away that dependence
+      because the variable is absent from its input. Early in training, OPSD may
+      appear useful because the student is far from the teacher marginal. Later,
+      once the learnable shared component becomes smaller, sample-specific
+      privileged detail can dominate the gradient.
+    </p>
+
+    <p>
+      This is privileged information leakage. The model may not simply memorize
+      training samples; rather, the loss itself encourages it to imitate a
+      teacher distribution that depends on information unavailable at inference.
+      Reducing the support, for example with teacher top-1 or student top-1, can
+      reduce the bandwidth of leakage, but it does not change the underlying
+      information structure.
+    </p>
+
+    <h2 id="rlsd">8. RLSD: Demoting the Teacher from Target to Credit Weight</h2>
+    <p>
+      RLSD's core correction can be summarized in one sentence: the privileged
+      teacher should not decide what the student must generate; it should only
+      help decide how much credit the student's already generated tokens receive.
+      The RLVR or GRPO backbone remains responsible for the positive or negative
+      direction of the trajectory update, while the teacher gap redistributes
+      token-level credit inside that direction.
+    </p>
+
+    <figure>
+      <img
+        src="../assets/blog-images/opd-series/rlsd-figure-4-framework.png"
+        alt="RLSD framework from Self-Distilled RLVR"
+      >
+      <figcaption>
+        Figure 4 from Self-Distilled RLVR. RLSD keeps the outcome-reward
+        backbone and places the privileged teacher gap into token-level weights,
+        instead of treating the teacher distribution as a direct target.
+      </figcaption>
+    </figure>
+
+    <p>
+      There are two branches to keep separate. The RLVR branch judges whether a
+      trajectory is good or bad and produces a sequence-level advantage. The
+      self-distillation branch compares teacher and student support on tokens
+      that the student has already generated. The important design choice is that
+      outcome reward decides direction, and the teacher gap decides magnitude.
+    </p>
+
+    <pre><code>Delta_t = stop_gradient(
+  log P_T(y_t) - log P_S(y_t)
+)
+
+w_t = exp(sign(A) * Delta_t)</code></pre>
+
+    <p>
+      Here <code>A</code> is the sequence-level advantage. If the trajectory is
+      positive, tokens more supported by the teacher receive more credit. If the
+      trajectory is negative, tokens less supported by the teacher receive more
+      blame. The weight changes the scale of the update, not the sign of the
+      advantage. That <code>sign(A)</code> is the key move: it demotes the
+      privileged teacher from judge to attribution module.
+    </p>
+
+    <p>
+      Intuitively, <code>exp(Delta_t)</code> is an evidence ratio. If the teacher
+      believes the token more strongly than the student, the token may be closer
+      to reference-conditioned reasoning. If the teacher believes it less, it may
+      be farther away. RLSD does not allow this ratio to decide policy direction
+      by itself. It is only allowed to shape credit under the direction already
+      determined by verifier or environment reward.
+    </p>
+
+    <p>
+      This closes the most dangerous channel in naive OPSD. The teacher cannot
+      directly pull an unseen privileged token into the student support. It can
+      only evaluate tokens that the student has actually produced. With clipping,
+      teacher synchronization, and decay of the auxiliary signal, the authority
+      of privileged information is limited to credit shaping rather than target
+      definition.
+    </p>
+
+    <h2 id="sdar">9. SDAR: A More Conservative Interface for Multi-Step Agents</h2>
+    <p>
+      SDAR moves the same question into multi-step agent training. In this
+      setting, teacher signals are even less stable than in single-turn RLVR
+      because every action changes later observations. A retrieved skill can be
+      correct in isolation, but if the student already took a wrong earlier
+      action, the later state may no longer match the skill's assumptions.
+    </p>
+
+    <figure>
+      <img
+        src="../assets/blog-images/opd-series/sdar-figure-4-framework.png"
+        alt="SDAR framework from Self-Distilled Agentic Reinforcement Learning"
+      >
+      <figcaption>
+        Figure 4 from Self-Distilled Agentic Reinforcement Learning. SDAR
+        retrieves relevant skills and lets a self-teacher evaluate student
+        tokens under a richer context, but the main policy update still remains
+        under the GRPO objective.
+      </figcaption>
+    </figure>
+
+    <p>
+      The privileged information in agent tasks is also different. In math
+      reasoning, the privileged input is often a reference answer or verified
+      solution. In agent training, it may be a retrieved skill, historical
+      experience, tool-use pattern, or task decomposition hint. Such information
+      may be useful, but it is not guaranteed to be grounded in the student's
+      current state.
+    </p>
+
+    <p>
+      SDAR therefore takes a more conservative route than RLSD. It keeps the
+      GRPO objective intact and adds a gated auxiliary loss:
+    </p>
+
+    <pre><code>Delta_t = log pi_T(y_t | s_t+) - log pi_theta(y_t | s_t)
+g_t = sigmoid(beta * Delta_t)
+
+L = L_GRPO + lambda_SDAR * L_SDAR</code></pre>
+
+    <p>
+      When the teacher supports the current token more strongly, the gate is
+      larger and the auxiliary likelihood term is stronger. When the teacher
+      does not support it, the token receives less auxiliary credit, but it is
+      not directly punished by the teacher. This is asymmetric trust: positive
+      endorsement is relatively useful, while a negative gap may come from skill
+      noise, retrieval error, grounding failure, or state drift.
+    </p>
+
+    <p>
+      This is why the self-distilled component and the agentic RL component are
+      separate. GRPO still learns the direction of task success from environment
+      feedback. The skill-conditioned teacher only provides extra local
+      reinforcement for actions the student already took. After training, the
+      student should not depend on an external skill prompt; it should internalize
+      the stable and transferable behavior patterns.
+    </p>
+
+    <p>
+      RLSD and SDAR both repair OPSD, but they do so in different regimes. RLSD
+      fits RLVR settings where outcome rewards are relatively reliable and the
+      teacher can shape token credit. SDAR fits skill-conditioned multi-step
+      agents, where the safer design is to isolate teacher information inside a
+      gated auxiliary signal. RLSD is about credit redistribution; SDAR is about
+      risk isolation.
+    </p>
+
+    <h2 id="unified-view">10. A Unified View: OPD Is Teacher-Authority Management</h2>
+    <p>
+      Across the series, the important trend is not "use a stronger teacher."
+      The important trend is deciding what role the teacher is allowed to play.
+      In basic OPD, the teacher is a token-level evaluator on states visited by
+      the student. Rethinking OPD emphasizes that this evaluator must be
+      compatible with the student's thinking pattern and must provide
+      transferable information. Uni-OPD adds outcome-level calibration so that
+      dense token gaps do not contradict correctness.
+    </p>
+
+    <p>
+      After OPSD, the focus shifts to privileged information. If the teacher sees
+      a reference answer, retrieved skill, or any input that the student will not
+      have during inference, direct distribution matching becomes dangerous.
+      RLSD demotes the teacher from generation target to credit multiplier. SDAR
+      goes further in multi-step agent settings and isolates the teacher signal
+      as a gated auxiliary term.
+    </p>
+
+    <p>
+      The same quantity, <code>log pi_T - log pi_theta</code>, can therefore
+      mean different things. It can be a token reward, a component of
+      trajectory-level return, a leakage path, a credit weight, or an auxiliary
+      gate. The right interpretation depends on what the teacher sees and what
+      authority we give it in the optimization process.
+    </p>
+
+    <h2 id="takeaways">11. Takeaways</h2>
+    <p>
+      My main takeaway is that OPD is not a simple story of asking a stronger
+      model to teach a weaker one. The hard part is deciding when the teacher
+      signal is trustworthy, how far that trust should go, and how the signal
+      should enter training. A dense token-level preference can be useful, but
+      it does not automatically agree with final correctness. If the teacher
+      also sees information hidden from the student, direct distillation can
+      import the wrong training objective into the student policy.
+    </p>
+
+    <p>
+      I now think of OPD as a problem of signal interface design. When teacher
+      and student states are close, the teacher can provide direct local token
+      correction. When token gaps may disagree with correctness, a verifier
+      should calibrate them. When the teacher depends on privileged information,
+      it should not directly decide what the student must generate; it is safer
+      to use it as a credit weight or an auxiliary gate. This is why RLSD and
+      SDAR are more interesting than naive OPSD: they reduce teacher authority
+      exactly where information asymmetry becomes dangerous.
+    </p>
+
+    <h2 id="references">References</h2>
+    <ul>
+      <li><a href="https://arxiv.org/abs/2604.13016">Rethinking On-Policy Distillation of Large Language Models</a></li>
+      <li><a href="https://arxiv.org/abs/2605.03677">Uni-OPD: Unifying On-Policy Distillation with a Dual-Perspective Recipe</a></li>
+      <li><a href="https://arxiv.org/abs/2601.18734">Self-Distilled Reasoner: On-Policy Self-Distillation for Large Language Models</a></li>
+      <li><a href="https://arxiv.org/abs/2604.03128">Self-Distilled RLVR</a></li>
+      <li><a href="https://arxiv.org/abs/2605.15155">Self-Distilled Agentic Reinforcement Learning</a></li>
+    </ul>
+  </article>
+</body>
+</html>
