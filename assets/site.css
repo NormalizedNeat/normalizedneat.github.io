@@ -119,6 +119,12 @@ img {
   font-size: 14px;
 }
 
+.post-language-links {
+  margin: -5px 0 8px;
+  color: #555;
+  font-size: 14px;
+}
+
 .post-list {
   margin-top: 18px;
 }
@@ -147,94 +153,82 @@ figcaption {
   font-size: 14px;
 }
 
-body.opd-page {
-  max-width: 1080px;
-  color: #171717;
-  background: #f8f9f8;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-  font-size: 17px;
-  line-height: 1.72;
+body.blog-page {
+  background: #fff;
 }
 
-body.opd-page a {
-  color: #1f5d56;
-}
-
-body.opd-page .nav-line {
-  max-width: 820px;
-  margin: 0 auto 22px;
-  color: #59625f;
+body.blog-page .nav-line {
+  color: #555;
   font-size: 14px;
 }
 
+.post-nav {
+  display: flex;
+  gap: 18px;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.language-switch {
+  white-space: nowrap;
+}
+
+.language-switch [aria-current="page"] {
+  color: #111;
+}
+
 .research-article {
-  max-width: 820px;
-  margin: 0 auto 72px;
+  max-width: 800px;
+  margin-bottom: 56px;
 }
 
 .post-hero {
-  padding: 30px 0 28px;
-  border-top: 4px solid #1f6f68;
-  border-bottom: 1px solid #d7dfdc;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #aaa;
 }
 
 .post-kicker {
   margin: 0 0 8px;
-  color: #1f6f68;
+  color: #555;
   font-size: 14px;
-  font-weight: 700;
 }
 
 .research-article h1 {
-  margin: 0 0 14px;
-  font-size: 36px;
-  font-weight: 700;
-  line-height: 1.18;
+  margin: 0 0 12px;
+  font-size: 30px;
+  font-weight: normal;
+  line-height: 1.25;
 }
 
 .post-dek {
-  max-width: 760px;
+  max-width: 740px;
   margin: 0;
-  color: #39423f;
-  font-size: 18px;
-  line-height: 1.65;
+  color: #333;
+  font-size: 16px;
+  line-height: 1.5;
 }
 
 .post-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 18px;
-  margin-top: 16px;
-  color: #58625f;
-  font-size: 13px;
+  margin-top: 12px;
+  color: #555;
+  font-size: 14px;
 }
 
-.post-tags span {
-  position: relative;
-  padding-left: 12px;
-}
-
-.post-tags span::before {
-  position: absolute;
-  top: 0.82em;
-  left: 0;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #b55a34;
-  content: "";
+.post-tags span + span::before {
+  margin: 0 8px;
+  content: "/";
 }
 
 .paper-toc {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px 22px;
-  margin: 24px 0 32px;
-  padding: 16px 18px;
-  border: 1px solid #dbe4e1;
-  border-left: 4px solid #1f6f68;
-  border-radius: 0 8px 8px 0;
-  background: #fff;
+  margin: 20px 0 26px;
+  padding: 12px 0;
+  border-top: 1px solid #aaa;
+  border-bottom: 1px solid #aaa;
   font-size: 14px;
   line-height: 1.45;
 }
@@ -242,40 +236,30 @@ body.opd-page .nav-line {
 .toc-title {
   grid-column: 1 / -1;
   margin: 0 0 3px;
-  color: #2d3633;
-  font-weight: 700;
-}
-
-.paper-toc a {
-  color: #1f5d56;
+  font-weight: bold;
 }
 
 .article-lead {
-  margin-bottom: 22px;
-  color: #222;
-  font-size: 18px;
-  line-height: 1.8;
+  margin-bottom: 18px;
+  font-size: 16px;
+  line-height: 1.55;
 }
 
 .article-lead p {
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .reading-lens {
-  margin: 20px 0 34px;
-  padding: 14px 18px;
-  border-top: 1px solid #eadbd5;
-  border-bottom: 1px solid #eadbd5;
-  border-left: 4px solid #b55a34;
-  border-radius: 0 8px 8px 0;
-  background: #fff;
+  margin: 18px 0 28px;
+  padding: 12px 0;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
 }
 
 .lens-label {
   margin: 0 0 3px;
-  color: #8d3f24;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: bold;
 }
 
 .reading-lens p:last-child {
@@ -283,76 +267,63 @@ body.opd-page .nav-line {
 }
 
 .research-article p {
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .research-article h2 {
-  margin: 44px 0 15px;
-  padding-top: 24px;
-  border-top: 1px solid #dde4e1;
-  color: #111;
-  font-size: 23px;
-  font-weight: 700;
-  line-height: 1.38;
+  margin: 34px 0 12px;
+  padding-top: 17px;
+  border-top: 1px solid #aaa;
+  font-size: 20px;
+  font-weight: normal;
+  line-height: 1.4;
   scroll-margin-top: 24px;
 }
 
-.research-article h2::before {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  margin-right: 10px;
-  border-radius: 50%;
-  background: #b55a34;
-  vertical-align: 0.12em;
-  content: "";
-}
-
 .research-article figure {
-  margin: 26px 0 31px;
-  padding: 12px;
-  border: 1px solid #d7dfdc;
-  border-radius: 8px;
-  background: #fff;
-  box-shadow: 0 12px 28px rgba(30, 38, 34, 0.06);
-}
-
-.research-article figure img {
-  border-radius: 4px;
+  margin: 22px 0 26px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
 }
 
 .research-article figcaption {
-  margin-top: 10px;
-  padding-top: 9px;
-  border-top: 1px solid #edf0ee;
-  color: #505956;
+  margin-top: 7px;
+  color: #555;
   font-size: 14px;
-  line-height: 1.55;
+  line-height: 1.45;
+}
+
+.math-display {
+  margin: 18px 0 22px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  text-align: center;
+}
+
+.math-display mjx-container[display="true"] {
+  min-width: max-content;
+  margin: 0 !important;
+  padding: 6px 0;
 }
 
 .research-article code {
   padding: 1px 4px;
-  border: 1px solid #e0e3e1;
-  border-radius: 4px;
-  background: #f3f5f4;
-  color: #1c3935;
+  border: 1px solid #ddd;
+  background: #f7f7f7;
 }
 
 .research-article pre {
-  margin: 18px 0 22px;
-  padding: 14px 16px;
-  border: 0;
-  border-radius: 8px;
-  background: #17211f;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  margin: 14px 0 18px;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  background: #f7f7f7;
 }
 
 .research-article pre code {
   padding: 0;
   border: 0;
   background: transparent;
-  color: #f4f7f5;
-  line-height: 1.58;
+  line-height: 1.5;
 }
 
 .research-article ul {
@@ -377,42 +348,31 @@ body.opd-page .nav-line {
     margin: 0 0 16px;
   }
 
-  body.opd-page {
-    padding: 0 18px 34px;
-    font-size: 16px;
-  }
-
-  body.opd-page .nav-line {
+  body.blog-page .nav-line {
     margin-bottom: 16px;
   }
 
+  .post-nav {
+    flex-wrap: wrap;
+    gap: 6px 14px;
+  }
+
   .post-hero {
-    padding: 24px 0 22px;
+    padding-bottom: 16px;
   }
 
   .research-article h1 {
-    font-size: 28px;
-  }
-
-  .post-dek,
-  .article-lead {
-    font-size: 16px;
+    font-size: 26px;
   }
 
   .paper-toc {
     grid-template-columns: 1fr;
     gap: 7px;
-    padding: 14px 15px;
+    padding: 11px 0;
   }
 
   .research-article h2 {
-    margin-top: 36px;
+    margin-top: 30px;
     font-size: 20px;
-  }
-
-  .research-article figure {
-    margin-right: -4px;
-    margin-left: -4px;
-    padding: 8px;
   }
 }

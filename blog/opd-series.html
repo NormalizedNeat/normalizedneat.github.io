@@ -10,10 +10,17 @@
   <link rel="icon" type="image/png" href="../favicon-32.png?v=2" sizes="32x32">
   <link rel="apple-touch-icon" href="../apple-touch-icon.png?v=2">
   <link rel="stylesheet" href="../assets/site.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@4.0.0/tex-chtml.js"></script>
 </head>
 
-<body class="opd-page">
-  <p class="nav-line"><a href="../index.html">Yinuo Meng</a> / <a href="index.html">Blog</a></p>
+<body class="blog-page">
+  <p class="nav-line post-nav">
+    <span><a href="../index.html">Yinuo Meng</a> / <a href="index.html">Blog</a></span>
+    <span class="language-switch">
+      <span aria-current="page">English</span> /
+      <a href="opd-series-zh.html" lang="zh-CN">中文</a>
+    </span>
+  </p>
 
   <article class="article research-article">
     <header class="post-hero">
@@ -60,7 +67,7 @@
 
       <p>
         The important object is often the same local gap:
-        <code>log pi_T - log pi_theta</code>. Its meaning changes completely
+        \(\log \pi_T - \log \pi_\theta\). Its meaning changes completely
         depending on the information structure. If the teacher and student see
         the same state, this gap may be a useful token-level preference. If the
         teacher sees a reference answer, retrieved skill, or other privileged
@@ -108,9 +115,9 @@
 
     <p>
       OPD changes this by making the student roll out first. Given a prompt
-      <code>x</code>, we sample <code>y ~ pi_theta(. | x)</code> from the
+      \(x\), we sample \(y \sim \pi_\theta(\cdot \mid x)\) from the
       current policy. Then, for each student-generated prefix
-      <code>(x, y_&lt;t)</code>, we query the teacher's next-token distribution.
+      \((x,y_{1:t-1})\), we query the teacher's next-token distribution.
       The teacher is no longer teaching only on its own comfortable trajectory;
       it is asked to provide local feedback on the states that the student
       really visits.
@@ -120,8 +127,22 @@
       The objective is usually closer to reverse KL:
     </p>
 
-    <pre><code>L_OPD = E_{y ~ pi_theta(. | x)}
-  [ sum_t D_KL(pi_theta(. | x, y_&lt;t) || pi_T(. | x, y_&lt;t)) ]</code></pre>
+    <div class="math-display">
+      \[
+      \mathcal{L}_{\mathrm{OPD}}(\theta)
+      =
+      \mathbb{E}_{\substack{x \sim \mathcal{D}\\
+      y \sim \pi_\theta(\cdot \mid x)}}
+      \left[
+      \sum_{t=1}^{|y|}
+      D_{\mathrm{KL}}\!\left(
+      \pi_\theta(\cdot \mid x,y_{1:t-1})
+      \,\middle\|\,
+      \pi_T(\cdot \mid x,y_{1:t-1})
+      \right)
+      \right].
+      \]
+    </div>
 
     <p>
       The KL direction is not just a mathematical detail. Forward KL places the
@@ -136,11 +157,19 @@
       If we look only at the sampled token, the local signal can be written as:
     </p>
 
-    <pre><code>r_t = log pi_T(y_t | x, y_&lt;t) - log pi_theta(y_t | x, y_&lt;t)</code></pre>
+    <div class="math-display">
+      \[
+      r_t^{\mathrm{OPD}}
+      =
+      \log \pi_T(y_t \mid x,y_{1:t-1})
+      -
+      \log \pi_\theta(y_t \mid x,y_{1:t-1}).
+      \]
+    </div>
 
     <p>
       When the teacher supports the sampled token more than the student does,
-      <code>r_t</code> is positive; otherwise it is negative. This is the main
+      \(r_t^{\mathrm{OPD}}\) is positive; otherwise it is negative. This is the main
       attraction of OPD compared with sparse outcome-reward RL. RLVR can tell
       the model whether the final answer is correct, but OPD tries to tell the
       model whether each token is locally reasonable under the teacher.
@@ -160,7 +189,7 @@
       There are several implementation granularities. Full-vocabulary OPD
       computes KL over the entire vocabulary at each position, which is the most
       information-rich but also the most expensive because it requires
-      <code>B * T * |V|</code> logits. Top-k OPD renormalizes over a subset of
+      \(B\,T\,|\mathcal{V}|\) logits. Top-k OPD renormalizes over a subset of
       high-probability tokens, trading off fidelity and cost. Sampled-token OPD
       uses only the token actually sampled by the student. Even though it
       observes one token per position, its expectation is still tied to reverse
@@ -308,8 +337,19 @@
       For a trajectory, the token gap can be averaged into:
     </p>
 
-    <pre><code>G_OPD(q, tau) = (1 / |tau|) sum_t
-  [log pi_T(o_t | q, o_&lt;t) - log pi_theta(o_t | q, o_&lt;t)]</code></pre>
+    <div class="math-display">
+      \[
+      G_{\mathrm{OPD}}(q,\tau)
+      =
+      \frac{1}{|\tau|}
+      \sum_{t=1}^{|\tau|}
+      \left[
+      \log \pi_T(o_t \mid q,o_{1:t-1})
+      -
+      \log \pi_\theta(o_t \mid q,o_{1:t-1})
+      \right].
+      \]
+    </div>
 
     <p>
       If a verifier can distinguish correct and incorrect trajectories for the
@@ -367,7 +407,7 @@
 
     <p>
       In a typical OPSD setup, the student samples a reasoning trajectory from
-      the prompt <code>x</code>. The self-teacher is the same model, but its
+      the prompt \(x\). The self-teacher is the same model, but its
       prompt additionally contains a reference answer or hint. On the tokens
       already generated by the student, we compute both student and teacher
       log-probabilities and use their gap as dense supervision. The appeal is
@@ -395,11 +435,17 @@
       variables.
     </p>
 
-    <pre><code>P_S(y_t | x, y_&lt;t) ~= P_T(y_t | x, r, y_&lt;t)</code></pre>
+    <div class="math-display">
+      \[
+      \pi_S(y_t \mid x,y_{1:t-1})
+      \approx
+      \pi_T(y_t \mid x,r,y_{1:t-1}).
+      \]
+    </div>
 
     <p>
-      Here <code>r</code> may be a reference answer, skill, or other privileged
-      context. The student never sees <code>r</code> at inference time. A safer
+      Here \(r\) may be a reference answer, skill, or other privileged
+      context. The student never sees \(r\) at inference time. A safer
       target would be closer to a teacher distribution marginalized over such
       information, not a conditional distribution for each privileged context.
       This is the information asymmetry that later motivates RLSD and SDAR.
@@ -463,23 +509,34 @@
       outcome reward decides direction, and the teacher gap decides magnitude.
     </p>
 
-    <pre><code>Delta_t = stop_gradient(
-  log P_T(y_t) - log P_S(y_t)
-)
-
-w_t = exp(sign(A) * Delta_t)</code></pre>
+    <div class="math-display">
+      \[
+      \begin{aligned}
+      \Delta_t
+      &=
+      \operatorname{sg}\!\left[
+      \log \pi_T(y_t \mid x,r,y_{1:t-1})
+      -
+      \log \pi_\theta(y_t \mid x,y_{1:t-1})
+      \right],\\
+      w_t
+      &=
+      \exp\!\left(\operatorname{sign}(A)\,\Delta_t\right).
+      \end{aligned}
+      \]
+    </div>
 
     <p>
-      Here <code>A</code> is the sequence-level advantage. If the trajectory is
+      Here \(A\) is the sequence-level advantage. If the trajectory is
       positive, tokens more supported by the teacher receive more credit. If the
       trajectory is negative, tokens less supported by the teacher receive more
       blame. The weight changes the scale of the update, not the sign of the
-      advantage. That <code>sign(A)</code> is the key move: it demotes the
+      advantage. That \(\operatorname{sign}(A)\) is the key move: it demotes the
       privileged teacher from judge to attribution module.
     </p>
 
     <p>
-      Intuitively, <code>exp(Delta_t)</code> is an evidence ratio. If the teacher
+      Intuitively, \(\exp(\Delta_t)\) is an evidence ratio. If the teacher
       believes the token more strongly than the student, the token may be closer
       to reference-conditioned reasoning. If the teacher believes it less, it may
       be farther away. RLSD does not allow this ratio to decide policy direction
@@ -532,10 +589,25 @@ w_t = exp(sign(A) * Delta_t)</code></pre>
       GRPO objective intact and adds a gated auxiliary loss:
     </p>
 
-    <pre><code>Delta_t = log pi_T(y_t | s_t+) - log pi_theta(y_t | s_t)
-g_t = sigmoid(beta * Delta_t)
-
-L = L_GRPO + lambda_SDAR * L_SDAR</code></pre>
+    <div class="math-display">
+      \[
+      \begin{aligned}
+      \Delta_t
+      &=
+      \log \pi_T(y_t \mid s_t^{+})
+      -
+      \log \pi_\theta(y_t \mid s_t),\\
+      g_t
+      &=
+      \sigma(\beta \Delta_t),\\
+      \mathcal{L}
+      &=
+      \mathcal{L}_{\mathrm{GRPO}}
+      +
+      \lambda_{\mathrm{SDAR}}\mathcal{L}_{\mathrm{SDAR}}.
+      \end{aligned}
+      \]
+    </div>
 
     <p>
       When the teacher supports the current token more strongly, the gate is
@@ -585,7 +657,7 @@ L = L_GRPO + lambda_SDAR * L_SDAR</code></pre>
     </p>
 
     <p>
-      The same quantity, <code>log pi_T - log pi_theta</code>, can therefore
+      The same quantity, \(\log \pi_T - \log \pi_\theta\), can therefore
       mean different things. It can be a token reward, a component of
       trajectory-level return, a leakage path, a credit weight, or an auxiliary
       gate. The right interpretation depends on what the teacher sees and what
