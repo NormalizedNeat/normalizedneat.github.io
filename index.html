@@ -23,14 +23,16 @@
         |
         <a href="https://github.com/NormalizedNeat">GitHub</a>
         |
+        <a href="#papers">Papers</a>
+        |
         <a href="blog/">Blog</a>
         |
       </p>
 
       <p>
-        I am a senior undergraduate student at the University of Electronic
-        Science and Technology of China (UESTC), and will continue my graduate
-        study at UESTC under the supervision of Prof. Weidong Mei.
+        I am completing my undergraduate study at the University of Electronic
+        Science and Technology of China (UESTC) and will begin my graduate study
+        there in 2026 under the supervision of Prof. Weidong Mei.
       </p>
 
       <p>
@@ -40,8 +42,8 @@
       </p>
 
       <p>
-        I am currently a large language model post-training intern at DiDi
-        Chuxing.
+        Since 2026, I have been a large language model post-training intern at
+        DiDi Chuxing.
       </p>
 
       <p>
@@ -60,20 +62,197 @@
 
   <hr>
 
-  <h2>Research Interests</h2>
+  <h2>News</h2>
   <ul>
-    <li>Agentic reinforcement learning and autonomous AI agents</li>
-    <li>Multimodal learning and multimodal large language models</li>
-    <li>Post-training, alignment, and evaluation of large language models</li>
+    <li>[2026 - Present] Large language model post-training intern at DiDi Chuxing.</li>
+    <li>[2026 - 2029] Incoming graduate student at UESTC, advised by Prof. Weidong Mei.</li>
   </ul>
 
   <hr>
 
-  <h2>News</h2>
-  <ul>
-    <li>[2026] Started an internship on large language model post-training at DiDi Chuxing.</li>
-    <li>[2026] I will continue my graduate study at UESTC, advised by Prof. Weidong Mei.</li>
-  </ul>
+  <h2>Experience</h2>
+
+  <div class="entry">
+    <p class="entry-title">DiDi Chuxing</p>
+    <p>Large language model post-training intern, 2026 - Present.</p>
+    <p>
+      I work on the post-training and evaluation of LLM agents, with a focus on
+      data construction, user simulation, alignment, and reliable behavior in
+      multi-turn interactions.
+    </p>
+  </div>
+
+  <hr>
+
+  <section id="papers" aria-labelledby="papers-heading">
+    <h2 id="papers-heading">Papers</h2>
+
+    <div class="paper-topic-list" aria-label="Paper topics">
+      <span class="paper-tag">LLM Agents</span>
+      <span class="paper-tag">Wireless Communication</span>
+    </div>
+
+    <div class="paper-list">
+      <article class="paper-item">
+        <a
+          class="paper-visual"
+          href="assets/papers/strat-bench-overview.png"
+          aria-label="Open the full STRAT-Bench method overview"
+        >
+          <img
+            class="paper-thumbnail"
+            src="assets/papers/strat-bench-overview.png"
+            alt="STRAT-Bench and SPADE pipeline from offline evidence construction to online strategic interaction"
+            width="1314"
+            height="620"
+            loading="lazy"
+          >
+        </a>
+
+        <div class="paper-content">
+          <p class="paper-title">
+            STRAT-Bench: Evaluating Conversational Agents with Strategic Users
+          </p>
+          <p class="paper-authors">
+            Minhao Qi<sup>*</sup>, <strong>Yinuo Meng<sup>*</sup></strong>,
+            Youjia Liu<sup>*</sup>, Rong Liu, Guohua Cheng, Jianling Liu,
+            Chang Men, Zhengdan Zhu
+          </p>
+          <p class="paper-note"><sup>*</sup> Equal contribution.</p>
+          <p class="paper-venue">Submitted to the KDD D&amp;B Track</p>
+          <p class="paper-links" aria-label="Paper resources">
+            <a href="#strat-bench-abstract">abstract</a>
+            |
+            <a href="https://github.com/Archie-qi/STRAT-Bench">code</a>
+          </p>
+
+          <div class="paper-abstract" id="strat-bench-abstract">
+            <p>
+              Existing conversational-agent benchmarks largely rely on cooperative users or
+              fixed personas. Real users, however, may withhold information, challenge
+              decisions, or change their strategy and emotion in response to the agent, making
+              their behavioral evolution difficult to capture with a predefined transition
+              model. We introduce STRAT-Bench, a benchmark of 300 executable tasks grounded in
+              500 anonymized real-world service conversations. We also propose SPADE, a
+              training-free user simulator that grounds behavioral adaptation in real
+              conversations through a recall-rerank-sampling pipeline. Against 200 held-out
+              conversations, SPADE improves behavioral Likeness by 0.147 and 0.104 with Qwen
+              and DeepSeek user backbones, respectively, and increases dialogue-level human
+              judgments from 56.0% to 72.0%. When interacting with these strategic users, all
+              three evaluated assistants exhibit 10.0-10.8 percentage-point decreases in Task
+              Completion relative to task-only users, underscoring the importance of modeling
+              strategic users when evaluating real-world conversational agents.
+            </p>
+            <a class="paper-abstract-close" href="#papers-heading">close abstract</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="paper-item">
+        <a
+          class="paper-visual"
+          href="assets/papers/uav-passive-6dma-system.png"
+          aria-label="Open the full UAV-enabled passive 6DMA system model"
+        >
+          <img
+            class="paper-thumbnail"
+            src="assets/papers/uav-passive-6dma-system.png"
+            alt="System model of a UAV-enabled passive 6DMA-assisted multicast system"
+            width="1876"
+            height="1004"
+            loading="lazy"
+          >
+        </a>
+
+        <div class="paper-content">
+          <p class="paper-title">
+            UAV-Enabled Passive 6D Movable Antennas: Joint Deployment and Beamforming Optimization
+          </p>
+          <p class="paper-authors">
+            Changhao Liu, Weidong Mei, Peilan Wang, <strong>Yinuo Meng</strong>, Boyu Ning, Zhi Chen
+          </p>
+          <p class="paper-venue">IEEE Transactions on Wireless Communications (TWC), 2026</p>
+          <p class="paper-links" aria-label="Paper resources">
+            <a href="https://doi.org/10.1109/TWC.2025.3643647">webpage</a>
+            |
+            <a href="https://arxiv.org/pdf/2412.11150">pdf</a>
+            |
+            <a href="#uav-passive-6dma-abstract">abstract</a>
+            |
+            <a href="assets/bib/uav-passive-6dma.bib">bibtex</a>
+            |
+            <a href="https://arxiv.org/abs/2412.11150">arXiv</a>
+          </p>
+
+          <div class="paper-abstract" id="uav-passive-6dma-abstract">
+            <p>
+              This paper introduces a UAV-enabled passive 6D movable antenna by mounting an
+              intelligent reflecting surface on a UAV. For a multicast downlink, it jointly
+              optimizes the UAV/IRS location, three-dimensional orientation, and passive
+              beamforming under an angle-dependent reflection model to maximize the minimum
+              user SNR. The single-user analysis shows that one-dimensional orientation is
+              sufficient and admits a closed-form optimum for a fixed location. For multiple
+              users, the proposed method combines alternating optimization, successive convex
+              approximation, coarse-to-fine search, and Gibbs sampling to improve exploration
+              and avoid poor local solutions.
+            </p>
+            <a class="paper-abstract-close" href="#papers-heading">close abstract</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="paper-item">
+        <a
+          class="paper-visual"
+          href="assets/papers/uav-secure-6dma-space-nulling.png"
+          aria-label="Open the full passive-6DMA space-nulling system model"
+        >
+          <img
+            class="paper-thumbnail"
+            src="assets/papers/uav-secure-6dma-space-nulling.png"
+            alt="Passive-6DMA-enabled space nulling for secure communications"
+            width="1200"
+            height="654"
+            loading="lazy"
+          >
+        </a>
+
+        <div class="paper-content">
+          <p class="paper-title">
+            UAV-Enabled Passive 6DMA for Secure Communications: A Space-Nulling Approach
+          </p>
+          <p class="paper-authors">
+            <strong>Yinuo Meng</strong>, Changhao Liu, Peilan Wang, Zhi Chen
+          </p>
+          <p class="paper-venue">IEEE Globecom Workshops (GC Wkshps), 2025</p>
+          <p class="paper-links" aria-label="Paper resources">
+            <a href="https://ieeexplore.ieee.org/document/11591115">webpage</a>
+            |
+            <a href="assets/papers/uav-secure-6dma-space-nulling.pdf">pdf</a>
+            |
+            <a href="#uav-secure-6dma-abstract">abstract</a>
+            |
+            <a href="assets/bib/uav-secure-6dma.bib">bibtex</a>
+          </p>
+
+          <div class="paper-abstract" id="uav-secure-6dma-abstract">
+            <p>
+              This paper studies physical-layer security with a UAV-mounted passive 6DMA.
+              Beyond conventional signal nulling, it introduces space nulling: the UAV's
+              position and three-dimensional rotation, together with the IRS's half-space
+              reflection, are used to place an eavesdropper outside the reflection region.
+              The design maximizes the legitimate user's achievable rate under the
+              space-nulling constraint. For each UAV/IRS position, the optimal rotation is
+              reduced to a lower-dimensional problem and derived in closed form; the position
+              is then selected by exhaustive search. Analysis and simulations identify
+              conditions under which the method approaches the secrecy-rate optimum.
+            </p>
+            <a class="paper-abstract-close" href="#papers-heading">close abstract</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
 
   <hr>
 
@@ -82,11 +261,6 @@
   <div class="entry">
     <p class="entry-title">
       <a href="blog/opd-series.html">OPD Series: On-Policy Distillation and Extensions in Post-Training</a>
-    </p>
-    <p class="post-language-links">
-      <a href="blog/opd-series.html">English</a>
-      |
-      <a href="blog/opd-series-zh.html" lang="zh-CN">中文</a>
     </p>
     <p>
       Reading notes on OPD, Uni-OPD, OPSD, RLSD, and SDAR, with a focus on how
@@ -102,24 +276,13 @@
 
   <div class="entry">
     <p class="entry-title">University of Electronic Science and Technology of China (UESTC)</p>
-    <p>Undergraduate student, currently in the senior year.</p>
-    <p>
-      I will also pursue my graduate study at UESTC, supervised by Prof.
-      Weidong Mei.
-    </p>
+    <p>Graduate study (incoming), 2026 - 2029.</p>
+    <p>Advisor: Prof. Weidong Mei.</p>
   </div>
 
-  <hr>
-
-  <h2>Experience</h2>
-
   <div class="entry">
-    <p class="entry-title">DiDi Chuxing</p>
-    <p>Large language model post-training intern.</p>
-    <p>
-      I work on post-training related topics for large language models,
-      including data, alignment, evaluation, and agent-oriented model behavior.
-    </p>
+    <p class="entry-title">University of Electronic Science and Technology of China (UESTC)</p>
+    <p>Undergraduate study, Glasgow College, 2022 - 2026.</p>
   </div>
 </body>
 </html>

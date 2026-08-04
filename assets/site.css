@@ -119,14 +119,131 @@ img {
   font-size: 14px;
 }
 
-.post-language-links {
-  margin: -5px 0 8px;
+.post-list {
+  margin-top: 18px;
+}
+
+.paper-topic-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.paper-tag {
+  display: inline-block;
+  padding: 2px 7px;
+  border: 1px solid #aaa;
+  border-radius: 3px;
+  color: #333;
+  font-size: 14px;
+}
+
+.paper-list {
+  display: grid;
+  gap: 26px;
+}
+
+.paper-item {
+  display: grid;
+  grid-template-columns: minmax(190px, 250px) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+  padding-bottom: 26px;
+  border-bottom: 1px solid #ddd;
+}
+
+.paper-item:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.paper-visual {
+  display: flex;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+}
+
+.paper-visual:hover {
+  text-decoration: none;
+}
+
+.paper-thumbnail {
+  display: block;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 2px;
+  object-fit: contain;
+}
+
+.paper-content {
+  min-width: 0;
+}
+
+.paper-content p {
+  margin-bottom: 5px;
+}
+
+.paper-title {
+  font-size: 17px;
+  font-weight: bold;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.paper-authors,
+.paper-venue {
+  line-height: 1.4;
+}
+
+.paper-note {
   color: #555;
   font-size: 14px;
 }
 
-.post-list {
-  margin-top: 18px;
+.paper-venue {
+  color: #333;
+  font-style: italic;
+}
+
+.paper-links {
+  margin-top: 12px;
+  font-size: 15px;
+}
+
+.paper-links a {
+  white-space: nowrap;
+}
+
+.paper-abstract {
+  display: none;
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-left: 2px solid #999;
+  background: #f7f7f7;
+  font-size: 15px;
+  line-height: 1.5;
+  scroll-margin-top: 18px;
+}
+
+.paper-abstract:target {
+  display: block;
+}
+
+.paper-abstract p:last-of-type {
+  margin-bottom: 5px;
+}
+
+.paper-abstract-close {
+  font-size: 14px;
 }
 
 .article {
@@ -346,6 +463,15 @@ body.blog-page .nav-line {
 
   .portrait {
     margin: 0 0 16px;
+  }
+
+  .paper-item {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .paper-visual {
+    max-width: 320px;
   }
 
   body.blog-page .nav-line {
