@@ -1,298 +1,139 @@
-<!DOCTYPE HTML>
-<html lang="en">
+<!doctype html>
+<!-- Local static preview. GitHub Pages builds the deployed homepage from _pages/about.md. -->
+<html lang="en" class="no-js">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
+  <title>Yinuo Meng - Homepage</title>
+  <meta name="description" content="Yinuo Meng's academic homepage">
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Yinuo Meng's personal homepage.">
-  <meta name="author" content="Yinuo Meng">
-  <title>Yinuo Meng</title>
-  <link rel="icon" href="favicon.ico?v=2" sizes="any">
-  <link rel="icon" type="image/png" href="favicon-32.png?v=2" sizes="32x32">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=2">
-  <link rel="stylesheet" href="assets/site.css">
+  <script>document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';</script>
+  <link rel="stylesheet" href="assets/css/preview.css">
+  <link rel="stylesheet" href="assets/css/academicons.css">
+  <link rel="icon" href="favicon.ico?v=3" sizes="any">
+  <link rel="icon" type="image/png" href="favicon-32.png?v=3" sizes="32x32">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png?v=3">
+  <meta name="theme-color" content="#ffffff">
 </head>
-
 <body>
-  <div class="top">
-    <div>
-      <h1>Yinuo Meng</h1>
-
-      <p class="links">
-        |
-        <a href="mailto:yinuomeng1008@gmail.com">Email</a>
-        |
-        <a href="https://github.com/NormalizedNeat">GitHub</a>
-        |
-        <a href="#papers">Papers</a>
-        |
-        <a href="blog/">Blog</a>
-        |
-      </p>
-
-      <p class="motto">Normalized in thought, neat by taste, NEET by nature.</p>
-
-      <p>
-        I am completing my undergraduate study at the University of Electronic
-        Science and Technology of China (UESTC) and will begin my graduate study
-        there in 2026 under the supervision of Prof. Weidong Mei.
-      </p>
-
-      <p>
-        My research interests lie in <b>Agentic RL</b> and <b>multimodal AI</b>.
-        I am also interested in
-        post-training large language models and building reliable AI agents.
-      </p>
-
-      <p>
-        Since 2026, I have been a large language model post-training intern at
-        <b>DiDi Chuxing</b>.
-      </p>
-
-      <p>
-        <b>Email:</b> yinuomeng1008 [AT] gmail.com
-      </p>
-    </div>
-
-    <img
-      class="portrait"
-      src="assets/avatar.jpg"
-      alt="Yinuo Meng"
-      width="150"
-      height="150"
-    >
-  </div>
-
-  <hr>
-
-  <h2>News</h2>
-  <ul>
-    <li>
-      [2026 - Present] I joined <b>DiDi Chuxing</b> as an LLM post-training
-      intern, contributing to the Driver Assistant project.
-    </li>
-    <li>
-      [2026 - 2029] I will begin my graduate study at UESTC in 2026, advised
-      by Prof. Weidong Mei.
-    </li>
-  </ul>
-
-  <hr>
-
-  <h2>Experience</h2>
-
-  <div class="entry">
-    <p class="entry-title">DiDi Chuxing</p>
-    <p>LLM Post-training Intern, 2026 - Present.</p>
-    <p>
-      I participate in <b>Driver Assistant</b>, a large-scale conversational AI
-      project at DiDi. My work spans the large language model post-training
-      workflow, including training-data construction, model training, rollout
-      evaluation, and iterative improvement of reliable multi-turn agent
-      behavior.
-    </p>
-  </div>
-
-  <hr>
-
-  <section id="papers" aria-labelledby="papers-heading">
-    <h2 id="papers-heading">Papers</h2>
-
-    <div class="paper-topic-list" aria-label="Paper topics">
-      <span class="paper-tag">LLM Agents</span>
-      <span class="paper-tag">Wireless Communication</span>
-    </div>
-
-    <div class="paper-list">
-      <article class="paper-item">
-        <a
-          class="paper-visual"
-          href="assets/papers/strat-bench-overview.png"
-          aria-label="Open the full STRAT-Bench method overview"
-        >
-          <img
-            class="paper-thumbnail"
-            src="assets/papers/strat-bench-overview.png"
-            alt="STRAT-Bench and SPADE pipeline from offline evidence construction to online strategic interaction"
-            width="1314"
-            height="620"
-            loading="lazy"
-          >
-        </a>
-
-        <div class="paper-content">
-          <p class="paper-title">
-            STRAT-Bench: Evaluating Conversational Agents with Strategic Users
-          </p>
-          <p class="paper-authors">
-            Minhao Qi<sup>*</sup>, <strong>Yinuo Meng<sup>*</sup></strong>,
-            Youjia Liu<sup>*</sup>, Rong Liu, Guohua Cheng, Jianling Liu,
-            Chang Men, Zhengdan Zhu
-          </p>
-          <p class="paper-note"><sup>*</sup> Equal contribution.</p>
-          <p class="paper-venue">Submitted to the KDD D&amp;B Track</p>
-          <p class="paper-links" aria-label="Paper resources">
-            <a href="#strat-bench-abstract">abstract</a>
-            |
-            <a href="https://github.com/Archie-qi/STRAT-Bench">code</a>
-          </p>
-
-          <div class="paper-abstract" id="strat-bench-abstract">
-            <p>
-              Existing conversational-agent benchmarks largely rely on cooperative users or
-              fixed personas. Real users, however, may withhold information, challenge
-              decisions, or change their strategy and emotion in response to the agent, making
-              their behavioral evolution difficult to capture with a predefined transition
-              model. We introduce STRAT-Bench, a benchmark of 300 executable tasks grounded in
-              500 anonymized real-world service conversations. We also propose SPADE, a
-              training-free user simulator that grounds behavioral adaptation in real
-              conversations through a recall-rerank-sampling pipeline. Against 200 held-out
-              conversations, SPADE improves behavioral Likeness by 0.147 and 0.104 with Qwen
-              and DeepSeek user backbones, respectively, and increases dialogue-level human
-              judgments from 56.0% to 72.0%. When interacting with these strategic users, all
-              three evaluated assistants exhibit 10.0-10.8 percentage-point decreases in Task
-              Completion relative to task-only users, underscoring the importance of modeling
-              strategic users when evaluating real-world conversational agents.
-            </p>
-            <a class="paper-abstract-close" href="#papers-heading">close abstract</a>
-          </div>
+  <div class="masthead"><div class="masthead__inner-wrap"><div class="masthead__menu">
+    <nav id="site-nav" class="greedy-nav"><button aria-label="Open navigation"><div class="navicon"></div></button>
+      <ul class="visible-links"><li class="masthead__menu-item masthead__menu-item--lg masthead__menu-home-item"><a href="index.html">Yinuo Meng</a></li><li class="masthead__menu-item"><a href="#news">News</a></li><li class="masthead__menu-item"><a href="#experience">Experience</a></li><li class="masthead__menu-item"><a href="#education">Education</a></li><li class="masthead__menu-item"><a href="#papers">Papers</a></li><li class="masthead__menu-item"><a href="blog/">Blog</a></li></ul>
+      <ul class="hidden-links hidden"></ul>
+    </nav>
+  </div></div></div>
+  <main id="main">
+    <div class="sidebar sticky">
+      <div itemscope itemtype="https://schema.org/Person" class="profile_box">
+        <div class="author__avatar"><img src="assets/avatar.jpg" class="author__avatar" alt="Yinuo Meng"></div>
+        <div class="author__content"><h3 class="author__name" itemprop="name">Yinuo Meng</h3><p class="author__motto">Normalized in thought, neat by taste, NEET by nature.</p></div>
+        <div class="author__urls-wrapper">
+          <ul class="author__urls social-icons">
+            <li class="author__description">Incoming graduate student at UESTC and LLM post-training intern at DiDi Chuxing</li>
+            <li><a href="mailto:yinuomeng1008@gmail.com"><i class="fas fa-fw fa-envelope"></i> Email</a></li>
+            <li><a href="https://github.com/NormalizedNeat"><i class="fab fa-fw fa-github"></i> GitHub</a></li>
+            <li><a href="blog/"><i class="fas fa-fw fa-pen"></i> Blog</a></li>
+          </ul>
+          <div class="author__urls_sm"><a href="mailto:yinuomeng1008@gmail.com"><i class="fas fa-fw fa-envelope"></i></a><a href="https://github.com/NormalizedNeat"><i class="fab fa-fw fa-github"></i></a><a href="blog/"><i class="fas fa-fw fa-pen"></i></a></div>
         </div>
-      </article>
-
-      <article class="paper-item">
-        <a
-          class="paper-visual"
-          href="assets/papers/uav-passive-6dma-system.png"
-          aria-label="Open the full UAV-enabled passive 6DMA system model"
-        >
-          <img
-            class="paper-thumbnail"
-            src="assets/papers/uav-passive-6dma-system.png"
-            alt="System model of a UAV-enabled passive 6DMA-assisted multicast system"
-            width="1876"
-            height="1004"
-            loading="lazy"
-          >
-        </a>
-
-        <div class="paper-content">
-          <p class="paper-title">
-            UAV-Enabled Passive 6D Movable Antennas: Joint Deployment and Beamforming Optimization
-          </p>
-          <p class="paper-authors">
-            Changhao Liu, Weidong Mei, Peilan Wang, <strong>Yinuo Meng</strong>, Boyu Ning, Zhi Chen
-          </p>
-          <p class="paper-venue">IEEE Transactions on Wireless Communications (TWC), 2026</p>
-          <p class="paper-links" aria-label="Paper resources">
-            <a href="https://doi.org/10.1109/TWC.2025.3643647">webpage</a>
-            |
-            <a href="https://arxiv.org/pdf/2412.11150">pdf</a>
-            |
-            <a href="#uav-passive-6dma-abstract">abstract</a>
-            |
-            <a href="assets/bib/uav-passive-6dma.bib">bibtex</a>
-            |
-            <a href="https://arxiv.org/abs/2412.11150">arXiv</a>
-          </p>
-
-          <div class="paper-abstract" id="uav-passive-6dma-abstract">
-            <p>
-              This paper introduces a UAV-enabled passive 6D movable antenna by mounting an
-              intelligent reflecting surface on a UAV. For a multicast downlink, it jointly
-              optimizes the UAV/IRS location, three-dimensional orientation, and passive
-              beamforming under an angle-dependent reflection model to maximize the minimum
-              user SNR. The single-user analysis shows that one-dimensional orientation is
-              sufficient and admits a closed-form optimum for a fixed location. For multiple
-              users, the proposed method combines alternating optimization, successive convex
-              approximation, coarse-to-fine search, and Gibbs sampling to improve exploration
-              and avoid poor local solutions.
-            </p>
-            <a class="paper-abstract-close" href="#papers-heading">close abstract</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="paper-item">
-        <a
-          class="paper-visual"
-          href="assets/papers/uav-secure-6dma-space-nulling.png"
-          aria-label="Open the full passive-6DMA space-nulling system model"
-        >
-          <img
-            class="paper-thumbnail"
-            src="assets/papers/uav-secure-6dma-space-nulling.png"
-            alt="Passive-6DMA-enabled space nulling for secure communications"
-            width="1200"
-            height="654"
-            loading="lazy"
-          >
-        </a>
-
-        <div class="paper-content">
-          <p class="paper-title">
-            UAV-Enabled Passive 6DMA for Secure Communications: A Space-Nulling Approach
-          </p>
-          <p class="paper-authors">
-            <strong>Yinuo Meng</strong>, Changhao Liu, Peilan Wang, Zhi Chen
-          </p>
-          <p class="paper-venue">IEEE Globecom Workshops (GC Wkshps), 2025</p>
-          <p class="paper-links" aria-label="Paper resources">
-            <a href="https://ieeexplore.ieee.org/document/11591115">webpage</a>
-            |
-            <a href="assets/papers/uav-secure-6dma-space-nulling.pdf">pdf</a>
-            |
-            <a href="#uav-secure-6dma-abstract">abstract</a>
-            |
-            <a href="assets/bib/uav-secure-6dma.bib">bibtex</a>
-          </p>
-
-          <div class="paper-abstract" id="uav-secure-6dma-abstract">
-            <p>
-              This paper studies physical-layer security with a UAV-mounted passive 6DMA.
-              Beyond conventional signal nulling, it introduces space nulling: the UAV's
-              position and three-dimensional rotation, together with the IRS's half-space
-              reflection, are used to place an eavesdropper outside the reflection region.
-              The design maximizes the legitimate user's achievable rate under the
-              space-nulling constraint. For each UAV/IRS position, the optimal rotation is
-              reduced to a lower-dimensional problem and derived in closed form; the position
-              is then selected by exhaustive search. Analysis and simulations identify
-              conditions under which the method approaches the secrecy-rate optimum.
-            </p>
-            <a class="paper-abstract-close" href="#papers-heading">close abstract</a>
-          </div>
-        </div>
-      </article>
+      </div>
     </div>
-  </section>
+    <article class="page" itemscope itemtype="https://schema.org/CreativeWork"><div class="page__inner-wrap"><section class="page__content" itemprop="text"><p><span class="anchor" id="about-me"></span></p>
+<h1>About Me</h1>
+<p>I am completing my undergraduate study at the <strong>University of Electronic Science and Technology of China (UESTC)</strong> and will begin my graduate study there in 2026 under the supervision of Prof. Weidong Mei.</p>
+<p>My research interests lie in <strong>Agentic Reinforcement Learning</strong> and <strong>Multimodal AI</strong>. I am also interested in post-training large language models and building reliable AI agents.</p>
+<p>Since 2026, I have been an LLM post-training intern at <strong>DiDi Chuxing</strong>.</p>
+<p><span class="anchor" id="news"></span></p>
+<h1>News</h1>
+<ul>
+<li><strong>2026 - Present:</strong> I joined <strong>DiDi Chuxing</strong> as an LLM post-training intern and am contributing to the Driver Assistant project.</li>
+<li><strong>2026 - 2029:</strong> I will begin my graduate study at UESTC in 2026, advised by Prof. Weidong Mei.</li>
+</ul>
+<p><span class="anchor" id="experience"></span></p>
+<h1>Experience</h1>
+<ul>
+<li><strong>2026 - Present: LLM Post-training Intern, DiDi Chuxing.</strong> I contribute to Driver Assistant, a large-scale conversational AI project. My work spans the post-training workflow, including training-data construction, model training, rollout evaluation, and iterative improvement of reliable multi-turn agent behavior.</li>
+</ul>
+<p><span class="anchor" id="education"></span></p>
+<h1>Education</h1>
+<ul>
+<li><strong>2026 - 2029:</strong> Graduate study, University of Electronic Science and Technology of China (UESTC). Advisor: Prof. Weidong Mei.</li>
+<li><strong>2022 - 2026:</strong> Undergraduate study, University of Electronic Science and Technology of China (UESTC).</li>
+</ul>
+<p><span class="anchor" id="papers"></span></p>
+<h1>Papers</h1>
+<div class="paper-topic-list" aria-label="Paper topics">
+  <span class="paper-topic">LLM Agents</span>
+  <span class="paper-topic">Wireless Communications</span>
+</div>
 
-  <hr>
-
-  <h2>Blog</h2>
-
-  <div class="entry">
-    <p class="entry-title">
-      <a href="blog/opd-series.html">OPD Series: On-Policy Distillation and Extensions in Post-Training</a>
-    </p>
-    <p>
-      Reading notes on OPD, Uni-OPD, OPSD, RLSD, and SDAR, with a focus on how
-      teacher signals should enter post-training.
-    </p>
+<h2>LLM Agents</h2>
+<article class="paper-box">
+  <div class="paper-box-image">
+    <a class="paper-visual" href="assets/papers/strat-bench-overview.png" aria-label="Open the full STRAT-Bench method overview">
+      <img src="assets/papers/strat-bench-overview.png" alt="STRAT-Bench and SPADE pipeline from offline evidence construction to online strategic interaction">
+    </a>
   </div>
-
-  <p class="links-line"><a href="blog/">All blog posts</a></p>
-
-  <hr>
-
-  <h2>Education</h2>
-
-  <div class="entry">
-    <p class="entry-title">University of Electronic Science and Technology of China (UESTC)</p>
-    <p>Graduate study (incoming), 2026 - 2029.</p>
-    <p>Advisor: Prof. Weidong Mei.</p>
+  <div class="paper-box-text">
+    <h3>STRAT-Bench: Evaluating Conversational Agents with Strategic Users</h3>
+    <p>Minhao Qi<sup>*</sup>, <strong>Yinuo Meng<sup>*</sup></strong>, Youjia Liu<sup>*</sup>, Rong Liu, Guohua Cheng, Jianling Liu, Chang Men, Zhengdan Zhu</p>
+    <p class="paper-note"><sup>*</sup> Equal contribution.</p>
+    <p class="paper-venue">Submitted to the KDD D&amp;B Track</p>
+    <p class="paper-links"><a href="https://github.com/Archie-qi/STRAT-Bench">code</a></p>
+    <details class="paper-abstract">
+      <summary>Abstract</summary>
+      <p>Existing conversational-agent benchmarks largely rely on cooperative users or fixed personas. Real users, however, may withhold information, challenge decisions, or change their strategy and emotion in response to the agent, making their behavioral evolution difficult to capture with a predefined transition model. We introduce STRAT-Bench, a benchmark of 300 executable tasks grounded in 500 anonymized real-world service conversations. We also propose SPADE, a training-free user simulator that grounds behavioral adaptation in real conversations through a recall-rerank-sampling pipeline. Against 200 held-out conversations, SPADE improves behavioral Likeness by 0.147 and 0.104 with Qwen and DeepSeek user backbones, respectively, and increases dialogue-level human judgments from 56.0% to 72.0%. When interacting with these strategic users, all three evaluated assistants exhibit 10.0-10.8 percentage-point decreases in Task Completion relative to task-only users, underscoring the importance of modeling strategic users when evaluating real-world conversational agents.</p>
+    </details>
   </div>
+</article>
 
-  <div class="entry">
-    <p class="entry-title">University of Electronic Science and Technology of China (UESTC)</p>
-    <p>Undergraduate study, 2022 - 2026.</p>
+<h2>Wireless Communications</h2>
+<article class="paper-box">
+  <div class="paper-box-image">
+    <a class="paper-visual" href="assets/papers/uav-passive-6dma-system.png" aria-label="Open the full UAV-enabled passive 6DMA system model">
+      <img src="assets/papers/uav-passive-6dma-system.png" alt="System model of a UAV-enabled passive 6DMA-assisted multicast system">
+    </a>
   </div>
+  <div class="paper-box-text">
+    <h3>UAV-Enabled Passive 6D Movable Antennas: Joint Deployment and Beamforming Optimization</h3>
+    <p>Changhao Liu, Weidong Mei, Peilan Wang, <strong>Yinuo Meng</strong>, Boyu Ning, Zhi Chen</p>
+    <p class="paper-venue">IEEE Transactions on Wireless Communications (TWC), 2026</p>
+    <p class="paper-links"><a href="https://doi.org/10.1109/TWC.2025.3643647">webpage</a> <span aria-hidden="true">|</span> <a href="https://arxiv.org/pdf/2412.11150">pdf</a> <span aria-hidden="true">|</span> <a href="assets/bib/uav-passive-6dma.bib">bibtex</a> <span aria-hidden="true">|</span> <a href="https://arxiv.org/abs/2412.11150">arXiv</a></p>
+    <details class="paper-abstract">
+      <summary>Abstract</summary>
+      <p>This paper introduces a UAV-enabled passive 6D movable antenna by mounting an intelligent reflecting surface on a UAV. For a multicast downlink, it jointly optimizes the UAV/IRS location, three-dimensional orientation, and passive beamforming under an angle-dependent reflection model to maximize the minimum user SNR. The single-user analysis shows that one-dimensional orientation is sufficient and admits a closed-form optimum for a fixed location. For multiple users, the proposed method combines alternating optimization, successive convex approximation, coarse-to-fine search, and Gibbs sampling to improve exploration and avoid poor local solutions.</p>
+    </details>
+  </div>
+</article>
+
+<article class="paper-box">
+  <div class="paper-box-image">
+    <a class="paper-visual" href="assets/papers/uav-secure-6dma-space-nulling.png" aria-label="Open the full passive-6DMA space-nulling system model">
+      <img src="assets/papers/uav-secure-6dma-space-nulling.png" alt="Passive-6DMA-enabled space nulling for secure communications">
+    </a>
+  </div>
+  <div class="paper-box-text">
+    <h3>UAV-Enabled Passive 6DMA for Secure Communications: A Space-Nulling Approach</h3>
+    <p><strong>Yinuo Meng</strong>, Changhao Liu, Peilan Wang, Zhi Chen</p>
+    <p class="paper-venue">IEEE Globecom Workshops (GC Wkshps), 2025</p>
+    <p class="paper-links"><a href="https://ieeexplore.ieee.org/document/11591115">webpage</a> <span aria-hidden="true">|</span> <a href="assets/papers/uav-secure-6dma-space-nulling.pdf">pdf</a> <span aria-hidden="true">|</span> <a href="assets/bib/uav-secure-6dma.bib">bibtex</a></p>
+    <details class="paper-abstract">
+      <summary>Abstract</summary>
+      <p>This paper studies physical-layer security with a UAV-mounted passive 6DMA. Beyond conventional signal nulling, it introduces space nulling: the UAV's position and three-dimensional rotation, together with the IRS's half-space reflection, are used to place an eavesdropper outside the reflection region. The design maximizes the legitimate user's achievable rate under the space-nulling constraint. For each UAV/IRS position, the optimal rotation is reduced to a lower-dimensional problem and derived in closed form; the position is then selected by exhaustive search. Analysis and simulations identify conditions under which the method approaches the secrecy-rate optimum.</p>
+    </details>
+  </div>
+</article>
+
+
+<p><span class="anchor" id="blog"></span></p>
+<h1>Blog</h1>
+<ul>
+<li><strong><a href="blog/opd-series.html">OPD Series: On-Policy Distillation and Extensions in Post-Training</a></strong><br>Reading notes on OPD, Uni-OPD, OPSD, RLSD, and SDAR, with a focus on how teacher signals should enter post-training.<br><a href="blog/opd-series.html">English</a> | <a href="blog/opd-series-zh.html">中文</a></li>
+</ul>
+<p><a href="blog/">View all posts</a></p>
+</section></div></article>
+  </main>
+  <script src="assets/js/main.min.js"></script>
 </body>
 </html>

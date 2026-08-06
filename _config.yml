@@ -1,0 +1,71 @@
+# Site settings
+title: "Yinuo Meng"
+description: "Incoming graduate student at UESTC and LLM post-training intern at DiDi Chuxing"
+url: "https://normalizedneat.github.io"
+repository: "NormalizedNeat/normalizedneat.github.io"
+locale: "en"
+timezone: "Asia/Shanghai"
+
+# Site author
+author:
+  name: "Yinuo Meng"
+  avatar: "/assets/avatar.jpg"
+  motto: "Normalized in thought, neat by taste, NEET by nature."
+  email: "yinuomeng1008@gmail.com"
+  github: "NormalizedNeat"
+  blog: "/blog/"
+
+# Content
+include:
+  - _pages
+exclude:
+  - docs
+  - Gemfile
+  - Gemfile.lock
+  - index.html
+  - LICENSE
+  - README.md
+  - run_server.sh
+  - node_modules
+  - vendor
+  - .bundle
+  - .sass-cache
+  - .jekyll-cache
+  - .jekyll-metadata
+  - assets/js/_main.js
+  - assets/js/plugins
+  - assets/js/vendor
+  - assets/css/preview.css
+
+encoding: "utf-8"
+markdown: kramdown
+highlighter: rouge
+permalink: /:categories/:title/
+
+kramdown:
+  input: GFM
+  hard_wrap: false
+  auto_ids: true
+  footnote_nr: 1
+  entity_output: as_char
+  toc_levels: 1..6
+  smart_quotes: lsquo,rsquo,ldquo,rdquo
+
+defaults:
+  - scope:
+      path: ""
+      type: pages
+    values:
+      layout: default
+      author_profile: true
+
+sass:
+  sass_dir: _sass
+  style: compressed
+
+plugins:
+  - jekyll-feed
+  - jekyll-gist
+  - jekyll-paginate
+  - jekyll-redirect-from
+  - jekyll-sitemap

@@ -1,0 +1,39 @@
+{% if page.author and site.data.authors[page.author] %}
+  {% assign author = site.data.authors[page.author] %}
+{% else %}
+  {% assign author = site.author %}
+{% endif %}
+
+<div itemscope itemtype="https://schema.org/Person" class="profile_box">
+  <div class="author__avatar">
+    <img src="{{ author.avatar | relative_url }}" class="author__avatar" alt="{{ author.name }}">
+  </div>
+
+  <div class="author__content">
+    <h3 class="author__name" itemprop="name">{{ author.name }}</h3>
+    {% if author.motto %}<p class="author__motto">{{ author.motto }}</p>{% endif %}
+  </div>
+
+  <div class="author__urls-wrapper">
+    <ul class="author__urls social-icons">
+      {% if site.description %}
+        <li class="author__description">{{ site.description }}</li>
+      {% endif %}
+      {% if author.email %}
+        <li><a href="mailto:{{ author.email }}"><i class="fas fa-fw fa-envelope" aria-hidden="true"></i> Email</a></li>
+      {% endif %}
+      {% if author.github %}
+        <li><a href="https://github.com/{{ author.github }}"><i class="fab fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+      {% endif %}
+      {% if author.blog %}
+        <li><a href="{{ author.blog | relative_url }}"><i class="fas fa-fw fa-pen" aria-hidden="true"></i> Blog</a></li>
+      {% endif %}
+    </ul>
+
+    <div class="author__urls_sm" aria-label="Profile links">
+      {% if author.email %}<a href="mailto:{{ author.email }}" aria-label="Email"><i class="fas fa-fw fa-envelope" aria-hidden="true"></i></a>{% endif %}
+      {% if author.github %}<a href="https://github.com/{{ author.github }}" aria-label="GitHub"><i class="fab fa-fw fa-github" aria-hidden="true"></i></a>{% endif %}
+      {% if author.blog %}<a href="{{ author.blog | relative_url }}" aria-label="Blog"><i class="fas fa-fw fa-pen" aria-hidden="true"></i></a>{% endif %}
+    </div>
+  </div>
+</div>

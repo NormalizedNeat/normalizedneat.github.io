@@ -1,0 +1,187 @@
+---
+---
+
+/*
+ *    Minimal Mistakes Jekyll Theme
+ *
+ *  - Michael Rose
+ *  - mademistakes.com
+ *  - https://twitter.com/mmistakes
+ *
+*/
+
+@import "vendor/breakpoint/breakpoint"; // media query mixins
+@import "variables";
+@import "mixins";
+@import "vendor/susy/susy";
+
+@import "reset";
+@import "base";
+
+@import "utilities";
+@import "animations";
+@import "tables";
+@import "buttons";
+@import "notices";
+@import "masthead";
+@import "navigation";
+@import "footer";
+@import "syntax";
+
+@import "forms";
+
+@import "page";
+@import "archive";
+@import "sidebar";
+
+@import "vendor/font-awesome/fontawesome";
+@import "vendor/font-awesome/solid";
+@import "vendor/font-awesome/brands";
+@import "vendor/magnific-popup/magnific-popup";
+@import "print";
+
+.paper-box {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1em;
+    align-items: start;
+    border-bottom: 1px solid #efefef;
+    padding: 1.5em 0;
+
+    .paper-box-image {
+        display: flex;
+        width: 100%;
+    }
+
+    .paper-box-text {
+        min-width: 0;
+
+        h3 {
+            margin: 0 0 .55em;
+            font-size: 1.05em;
+            line-height: 1.35;
+        }
+
+        p {
+            margin-bottom: .45em;
+            line-height: 1.45;
+        }
+    }
+
+    @include breakpoint($medium) {
+        grid-template-columns: minmax(210px, 38%) minmax(0, 1fr);
+        gap: 1.5em;
+    }
+}
+
+$scroll_offset : 2em;
+h1:before, .anchor:before {
+    content: '';
+    display: block;
+    position: relative;
+    width: 0;
+    height: $scroll_offset;
+    margin-top: -$scroll_offset;
+}
+
+.badge {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    position: absolute;
+    margin-top: .5em;
+    margin-left: -.5em;
+    color: white;
+    background-color: #00369f;
+    font-size: .8em;
+}
+
+.author__motto {
+    margin: .65em 0 1em;
+    color: #777a7d;
+    font-size: .82em !important;
+    font-style: italic;
+    line-height: 1.45 !important;
+    opacity: .82;
+}
+
+.author__description {
+    margin-bottom: .8em;
+    white-space: normal !important;
+}
+
+.paper-topic-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4em;
+    margin: 0 0 1.25em;
+}
+
+.paper-topic {
+    display: inline-block;
+    padding: .2em .55em;
+    border: 1px solid #bdc1c4;
+    border-radius: 3px;
+    color: #494e52;
+    font-size: .85em;
+    line-height: 1.3;
+}
+
+.paper-visual {
+    display: flex;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 1px solid #d7d9da;
+    border-radius: 4px;
+    background: #fff;
+
+    img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        max-width: none !important;
+        padding: 3px;
+        object-fit: contain !important;
+        box-shadow: none !important;
+    }
+}
+
+.paper-note {
+    color: #777a7d;
+    font-size: .85em !important;
+}
+
+.paper-venue {
+    color: #494e52;
+    font-style: italic;
+}
+
+.paper-links {
+    margin-top: .7em;
+    font-size: .92em;
+}
+
+.paper-abstract {
+    margin-top: .75em;
+    padding: .6em .8em;
+    border-left: 2px solid #9ba1a6;
+    background: #fafafa;
+    font-size: .9em;
+
+    summary {
+        color: #224b8d;
+        cursor: pointer;
+    }
+
+    p {
+        margin: .7em 0 0 !important;
+    }
+}
+
+@media (max-width: 47.99em) {
+    .paper-box .paper-box-image {
+        max-width: 420px;
+    }
+}
