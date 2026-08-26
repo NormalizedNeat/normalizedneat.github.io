@@ -2,5 +2,5 @@
 
 # Education
 
-- **2026 - 2029:** Graduate study, University of Electronic Science and Technology of China (UESTC). Advisor: Prof. Weidong Mei.
-- **2022 - 2026:** Undergraduate study, University of Electronic Science and Technology of China (UESTC).
+- **2026.Sep - Present:** Graduate studies, University of Electronic Science and Technology of China (UESTC). Advisor: Prof. Weidong Mei. Expected graduation: 2029.
+- **2022.Sep - 2026.Jun:** Undergraduate study, University of Electronic Science and Technology of China (UESTC).

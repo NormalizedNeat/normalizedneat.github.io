@@ -1,6 +1,6 @@
 # Site settings
 title: "Yinuo Meng"
-description: "Incoming graduate student at UESTC and LLM post-training intern at DiDi Chuxing"
+description: "Graduate student at UESTC and former LLM post-training intern at DiDi Chuxing"
 url: "https://normalizedneat.github.io"
 repository: "NormalizedNeat/normalizedneat.github.io"
 locale: "en"
@@ -10,7 +10,7 @@ timezone: "Asia/Shanghai"
 author:
   name: "Yinuo Meng"
   avatar: "/assets/avatar.jpg"
-  motto: "Normalized in thought, neat by taste, NEET by nature."
+  motto: "He never grows up, but he never stops growing."
   email: "yinuomeng1008@gmail.com"
   github: "NormalizedNeat"
   blog: "/blog/"
