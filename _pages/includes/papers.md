@@ -38,7 +38,7 @@
   </div>
   <div class="paper-box-text">
     <h3>UAV-Enabled Passive 6D Movable Antennas: Joint Deployment and Beamforming Optimization</h3>
-    <p>Changhao Liu, Weidong Mei, Peilan Wang, <strong>Yinuo Meng</strong>, Boyu Ning, Zhi Chen</p>
+    <p>Changhao Liu, <a href="https://faculty.uestc.edu.cn/meiweidong/zh_CN/index.htm">Weidong Mei</a>a>, Peilan Wang, <strong>Yinuo Meng</strong>, Boyu Ning, Zhi Chen</p>
     <p class="paper-venue">IEEE Transactions on Wireless Communications (TWC), 2026</p>
     <p class="paper-links"><a href="https://doi.org/10.1109/TWC.2025.3643647">webpage</a> <span aria-hidden="true">|</span> <a href="https://arxiv.org/pdf/2412.11150">pdf</a> <span aria-hidden="true">|</span> <a href="/assets/bib/uav-passive-6dma.bib">bibtex</a> <span aria-hidden="true">|</span> <a href="https://arxiv.org/abs/2412.11150">arXiv</a></p>
     <details class="paper-abstract">
