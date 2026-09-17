@@ -2,7 +2,7 @@
 
 # About Me
 
-I am a graduate student at the **University of Electronic Science and Technology of China (UESTC)** under the supervision of Prof. Weidong Mei. I began my graduate studies in **2026.Sep**, after completing my undergraduate studies at UESTC.
+I am a graduate student at the **University of Electronic Science and Technology of China (UESTC)** under the supervision of Prof. [Weidong Mei](https://faculty.uestc.edu.cn/meiweidong/zh_CN/index.htm). I began my graduate studies in **2026.Sep**, after completing my undergraduate studies at UESTC.
 
 My research interests lie in **Agentic Reinforcement Learning** and **Multimodal AI**. I am also interested in post-training large language models and building reliable AI agents.
 
